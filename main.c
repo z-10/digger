@@ -343,24 +343,11 @@ int mainprog(void)
     teststart();
     while (!started) {
       started=teststart();
-      switch(akeypressed)
-      {
-    	case 27:
-    	    break;
-    	case 'n':
-    	case 'N':
-            switchnplayers();
-	    shownplayers();
-    	    akeypressed=0;
-    	    break;
-    	case 'g':
-    	case 'G':
-    	    gauntlet=TRUE;
-	    shownplayers();
-    	    akeypressed=0;
-    	    break;
-    	default:
-    	    break;
+      if ((akeypressed==27 || akeypressed=='n' || akeypressed=='N') &&
+          !gauntlet && diggers==1) {
+        switchnplayers();
+        shownplayers();
+        akeypressed=0;
       }
       if (frame==0)
         for (t=54;t<174;t+=12)
@@ -465,21 +452,26 @@ void shownplayers(void)
 {
   if (diggers==2)
     if (gauntlet) {
-      outtext("TWO PLAYER GAUNTLET",180,25,3);
+      outtext("TWO PLAYER",180,25,3);
+      outtext("GAUNTLET",192,39,3);
     }
     else {
-      outtext("TWO PLAYER SIMULTANEOUS",180,25,3);
+      outtext("TWO PLAYER",180,25,3);
+      outtext("SIMULTANEOUS",170,39,3);
     }
   else
     if (gauntlet) {
-      outtext("GAUNTLET MODE",192,25,3);
+      outtext("GAUNTLET",192,25,3);
+      outtext("MODE",216,39,3);
     }
     else
       if (nplayers==1) {
-        outtext("ONE PLAYER",220,25,3);
+        outtext("ONE",220,25,3);
+        outtext(" PLAYER ",192,39,3);
       }
       else {
-        outtext("TWO PLAYERS",220,25,3);
+        outtext("TWO",220,25,3);
+        outtext(" PLAYERS",184,39,3);
       }
 }
 
