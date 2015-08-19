@@ -5,9 +5,9 @@
  * this  notice you can  do whatever you  want with this stuff. If we meet
  * some day, and you think this stuff is worth it, you can buy me a beer in
  * return.
- * 
+ *
  * Maxim Sobolev
- * --------------------------------------------------------------------------- 
+ * ---------------------------------------------------------------------------
  */
 
 /* malloc() and friends */
@@ -64,6 +64,9 @@ Sint4	currpal=0;
 Uint32	addflag=0;
 
 SDL_Surface *screen = NULL;
+SDL_Window *sdlWindow = NULL;
+SDL_Renderer *sdlRenderer = NULL;
+SDL_Texture *sdlTexture = NULL;
 
 /* Data structure holding pending updates */
 struct PendNode {
@@ -84,8 +87,8 @@ SDL_Surface *ch2bmap(Uint3 *sprite, Sint4 w, Sint4 h)
 	realw = virt2scrw(w*4);
 	realh = virt2scrh(h);
 	tmp = SDL_CreateRGBSurfaceFrom(sprite, realw, realh, 8, realw, 0, 0, 0, 0);
-	SDL_SetColors(tmp, screen->format->palette->colors, 0, screen->format->palette->ncolors);
-	
+	SDL_SetPaletteColors(tmp->format->palette, screen->format->palette->colors, 0, screen->format->palette->ncolors);
+
 	return(tmp);
 }
 
@@ -95,11 +98,16 @@ void graphicsoff(void)
 
 bool setmode(void)
 {
-	if((screen = SDL_SetVideoMode(640, 400, 8, \
-	    SDL_HWSURFACE | SDL_HWPALETTE | addflag)) == NULL)
+	if (SDL_SetWindowFullscreen(sdlWindow, addflag) < 0)
 		return(FALSE);
 	else
+	{
+		if(addflag == 0)
+		{
+			SDL_SetWindowSize(sdlWindow, 640, 480);
+		}
 		return(TRUE);
+	}
 }
 
 void switchmode(void)
@@ -107,13 +115,13 @@ void switchmode(void)
 	Uint32 saved;
 	SDL_Surface *tmp = NULL;
 	SDL_Surface *oldscreen;
-	
+
 	vgageti(0, 0, (Uint3 *)&tmp, 80, 200);
 	oldscreen = screen;
 	saved = addflag;
 
 	if(addflag == 0)
-		addflag = SDL_FULLSCREEN;
+		addflag = SDL_WINDOW_FULLSCREEN_DESKTOP;
 	else
 		addflag = 0;
 	if(setmode() == FALSE) {
@@ -125,7 +133,7 @@ void switchmode(void)
 		}
 	}
 
-	SDL_SetColors(screen, tmp->format->palette->colors, 0, \
+	SDL_SetPaletteColors(screen->format->palette, tmp->format->palette->colors, 0, \
 		tmp->format->palette->ncolors);
 	vgaputi(0, 0, (Uint3 *)&tmp, 80, 200);
 	SDL_FreeSurface(tmp);
@@ -135,30 +143,72 @@ void switchmode(void)
 
 void vgainit(void)
 {
+
+
 	SDL_Surface *tmp = NULL;
-	
+
 	tmp = SDL_CreateRGBSurfaceFrom(Icon, 64, 64, 8, 64, 0, 0, 0, 0);
-	SDL_SetColorKey(tmp, SDL_SRCCOLORKEY, 247); 			
+	SDL_SetColorKey(tmp, SDL_TRUE, 247);
 
 	tmp->format->palette->colors = IconPalette;
-	
+
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
 		fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
-	SDL_WM_SetCaption("D I G G E R", NULL);
-	SDL_WM_SetIcon(tmp, NULL);
+	sdlWindow = SDL_CreateWindow("D I G G E R",
+                             SDL_WINDOWPOS_UNDEFINED,
+                             SDL_WINDOWPOS_UNDEFINED,
+                             0, 0,
+                             SDL_WINDOW_OPENGL);
+  if(sdlWindow == NULL)
+	{
+		fprintf(stderr, "Couldn't initialize SDL window: %s\n", SDL_GetError());
+		exit(1);
+	}
+  SDL_SetWindowIcon(sdlWindow, tmp);
+
+	sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, 0);
+	if(sdlRenderer == NULL)
+	{
+		fprintf(stderr, "Couldn't initialize SDL renderer: %s\n", SDL_GetError());
+		exit(1);
+	}
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+	SDL_RenderSetLogicalSize(sdlRenderer, 640, 480);
+
+	sdlTexture = SDL_CreateTexture(sdlRenderer,
+                               SDL_PIXELFORMAT_ARGB8888,
+                               SDL_TEXTUREACCESS_STREAMING,
+                               640, 480);
+	if(sdlTexture == NULL)
+	{
+		fprintf(stderr, "Couldn't initialize SDL texture: %s\n", SDL_GetError());
+		exit(1);
+	}
+	screen = SDL_CreateRGBSurface(0, 640, 480, 8,
+                                        0,
+                                        0,
+                                        0,
+                                        0);
+
+	if(screen == NULL)
+	{
+		fprintf(stderr, "Couldn't initialize SDL surface: %s\n", SDL_GetError());
+		exit(1);
+	}
+
 	if(setmode() == FALSE) {
 		fprintf(stderr, "Couldn't set 640x480x8 video mode: %s\n", SDL_GetError());
 		exit(1);
-        }
+  }
 	SDL_ShowCursor(0);
 }
 
 void vgaclear(void)
 {
 	SDL_Surface *tmp = NULL;
-	
+
 	vgageti(0, 0, (Uint3 *)&tmp, 80, 200);
 	memset(tmp->pixels, 0x00, tmp->w*tmp->h);
 	vgaputi(0, 0, (Uint3 *)&tmp, 80, 200);
@@ -166,9 +216,9 @@ void vgaclear(void)
 }
 void setpal(SDL_Color *pal)
 {
-	SDL_SetColors(screen, pal, 0, 16);
+	SDL_SetPaletteColors(screen->format->palette, pal, 0, 16);
 }
-	
+
 void vgainten(Sint4 inten)
 {
 	if(inten == 1)
@@ -189,12 +239,15 @@ void doscreenupdate(void)
 
 	for(p=First;p!=NULL;)
 	{
-		SDL_UpdateRect(screen,p->rect.x,p->rect.y,p->rect.w,p->rect.h);
 		First = p->nextnode;
 		free(p);
 		p = First;
 	}
 	pendnum = 0;
+	SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+	SDL_RenderClear(sdlRenderer);
+	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+	SDL_RenderPresent(sdlRenderer);
 }
 
 void vgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
@@ -215,11 +268,11 @@ void vgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
 	tmp->format->palette = screen->format->palette;
 	SDL_BlitSurface(tmp, NULL, screen, &new->rect);
 	tmp->format->palette = reserv;
-/* 
+/*
  * Following piece of code comparing already pending updates with current with
  * main goal to prevent redrawing overlapping rectangles several times.
- */ 
-	
+ */
+
 	for(ptr=First;ptr!=NULL;ptr=ptr->nextnode) {
 		if((new->rect.x >= ptr->rect.x) &&
 		   (new->rect.y >= ptr->rect.y) &&
@@ -239,14 +292,14 @@ void vgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
 			return;
 		}
 	}
-			
+
 	if (pendnum == 0)
 		First = new;
 	else {
 		Last->nextnode = new;
 		new->prevnode = Last;
 	}
-	
+
 	Last = new;
 	pendnum++;
 }
@@ -255,7 +308,7 @@ void vgageti(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
 {
 	SDL_Surface *tmp;
 	SDL_Rect src;
-	
+
 	memcpy(&tmp, p, (sizeof (SDL_Surface *)));
 	if (tmp != NULL)
 		SDL_FreeSurface(tmp); /* Destroy previously allocated bitmap */
@@ -266,13 +319,13 @@ void vgageti(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
 	src.h = virt2scrh(h);
 
 	tmp = SDL_CreateRGBSurface(SDL_SWSURFACE, src.w, src.h, 8, 0, 0, 0, 0);
-	SDL_SetColors(tmp, screen->format->palette->colors, 0, screen->format->palette->ncolors);	
+	SDL_SetPaletteColors(tmp->format->palette, screen->format->palette->colors, 0, screen->format->palette->ncolors);
 	SDL_BlitSurface(screen, &src, tmp, NULL);
 	memcpy(p, &tmp, (sizeof (SDL_Surface *)));
 }
 
 Sint4 vgagetpix(Sint4 x, Sint4 y)
-{	
+{
 	SDL_Surface *tmp = NULL;
 	Uint4 xi,yi;
 	Uint4 i = 0;
@@ -384,19 +437,19 @@ void savescreen(void)
 {
 /*	FILE *f;
 	int i;
-	
+
 	f=fopen("screen.saw", "w");
-	
+
 	for(i=0;i<(VGLDisplay->Xsize*VGLDisplay->Ysize);i++)
 		fputc(VGLDisplay->Bitmap[i], f);
 	fclose(f);*/
 }
 
-/* 
+/*
  * Depreciated functions, necessary only to avoid "Undefined symbol:..." compiler
  * errors.
  */
- 
+
 void cgainit(void) {}
 void cgaclear(void) {}
 void cgatitle(void) {}

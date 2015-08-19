@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(digger)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
 set(SOURCE_FILES
 main.c
@@ -29,14 +30,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY build)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+find_package(SDL2 REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIR})
+link_libraries(${LIBS} ${SDL2_LIBRARY} z objc)
 set(SOURCE_FILES ${SOURCE_FILES} fbsd_sup.c)
-find_package(SDL REQUIRED)
-add_definitions(-D_SDL -DDARWIN -D_GNU_SOURCE=1 -D_THREAD_SAFE)
-include_directories(${SDL_INCLUDE_DIR})
-set(LIBS ${LIBS} ${SDL_LIBRARY})
-link_libraries(${LIBS} z objc)
-ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+add_definitions(-DDARWIN )
 
 #todo : add windows
 

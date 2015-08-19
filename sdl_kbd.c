@@ -5,9 +5,9 @@
  * this  notice you can  do whatever you  want with this stuff. If we meet
  * some day, and you think this stuff is worth it, you can buy me a beer in
  * return.
- * 
+ *
  * Maxim Sobolev
- * --------------------------------------------------------------------------- 
+ * ---------------------------------------------------------------------------
  */
 
 #include <SDL.h>
@@ -20,7 +20,7 @@
 Sint4 kbuffer[KBLEN];
 Sint4 klen=0;
 
-int Handler(const SDL_Event *event)
+int Handler(void* userdata, SDL_Event *event)
 {
 	if(event->type == SDL_KEYDOWN) {
 		if(klen == KBLEN) /* Buffer is full, drop some pieces */
@@ -41,9 +41,9 @@ int Handler(const SDL_Event *event)
 bool GetAsyncKeyState(int key)
 {
 	Uint8 *keys;
-	
+
 	SDL_PumpEvents();
-	keys = SDL_GetKeyState(NULL);
+	keys = SDL_GetKeyboardState(NULL);
 	if (keys[key] == SDL_PRESSED )
 		return(TRUE);
 	else
@@ -55,8 +55,8 @@ void initkeyb(void)
 	SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
 	SDL_EventState(SDL_MOUSEBUTTONDOWN, SDL_IGNORE);
 	SDL_EventState(SDL_MOUSEBUTTONUP, SDL_IGNORE);
-	
-	SDL_SetEventFilter(Handler);
+
+	SDL_SetEventFilter(Handler, NULL);
 }
 
 void restorekeyb(void)
@@ -66,7 +66,7 @@ void restorekeyb(void)
 Sint4 getkey(void)
 {
 	Sint4 result;
-	
+
 	while(kbhit() != TRUE)
 		gethrt();
 	result = kbuffer[0];
