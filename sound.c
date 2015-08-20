@@ -5,19 +5,8 @@
 #include "digger.h"
 #include "input.h"
 
-#ifdef _WINDOWS
-#include "win_dig.h"
-#include "win_snd.h"
-#endif
-
-#if defined _SDL || defined _SDL_SOUND
 #include <SDL.h>
 #include "sdl_snd.h"
-#endif
-
-#if defined _VGL && !defined _SDL_SOUND
-#include "fbsd_snd.h"
-#endif
 
 Sint4 wavetype=0,musvol=0;
 Sint4 spkrmode=0,timerrate=0x7d0;
@@ -104,10 +93,6 @@ void soundint(void)
     t2val=40;
     if (musicflag)
       musicupdate();
-#ifdef ARM
-    else
-      soundoff();
-#endif
     soundemeraldupdate();
     soundwobbleupdate();
     soundddieupdate();
@@ -163,29 +148,12 @@ void soundlevdone(void)
   soundlevdoneflag=soundpausedflag=TRUE;
   while (soundlevdoneflag && !escape) {
     fillbuffer();
-#ifdef _WINDOWS
-    do_windows_events();
-    if (!wave_device_available)
-      soundlevdoneflag=FALSE;
-#endif
-#if defined _SDL || defined _VGL
 	if (!wave_device_available)
 		soundlevdoneflag=FALSE;
-#endif
-#if defined _SDL || defined _SDL_SOUND
     SDL_Delay(10);	/* Let some CPU time go away */
-#endif
-#ifdef ARM
-    gretrace();
-    soundint();
-#else
     if (timerclock==timer)
       continue;
-#endif
     soundlevdoneupdate();
-#if !defined _SDL && !defined _SDL_SOUND
-    checkkeyb();
-#endif
     timer=timerclock;
   }
   soundlevdoneoff();
@@ -795,21 +763,13 @@ void musicupdate(void)
 void soundpause(void)
 {
   soundpausedflag=TRUE;
-#ifdef _WINDOWS
-  pause_windows_sound_playback();
-#elif defined _SDL || defined _SDL_SOUND
   SDL_PauseAudio(1);
-#endif
 }
 
 void soundpauseoff(void)
 {
   soundpausedflag=FALSE;
-#ifdef _WINDOWS
-  resume_windows_sound_playback();
-#elif defined _SDL || defined _SDL_SOUND
   SDL_PauseAudio(0);
-#endif
 }
 
 void sett0(void)

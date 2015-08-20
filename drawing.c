@@ -10,13 +10,8 @@
 
 Sint4 field1[MSIZE],field2[MSIZE],field[MSIZE];
 
-#ifdef _WINDOWS
-Uint3 monbufs[MONSTERS][960],bagbufs[BAGS][960],bonusbufs[BONUSES][960],
-      diggerbufs[DIGGERS][960],firebufs[FIREBALLS][256];
-#else
 Uint3 monbufs[MONSTERS][480],bagbufs[BAGS][480],bonusbufs[BONUSES][480],
       diggerbufs[DIGGERS][480],firebufs[FIREBALLS][128];
-#endif
 
 Uint4 bitmasks[12]={0xfffe,0xfffd,0xfffb,0xfff7,0xffef,0xffdf,0xffbf,0xff7f,
                     0xfeff,0xfdff,0xfbff,0xf7ff};

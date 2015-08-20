@@ -4,12 +4,7 @@
 #include "hardware.h"
 #include "record.h"
 #include "digger.h"
-#ifdef _WINDOWS
-#include "win_dig.h"
-#endif
-#ifdef _SDL
 #include <SDL.h>
-#endif
 
 bool escape=FALSE,firepflag=FALSE,aleftpressed=FALSE,arightpressed=FALSE,
      auppressed=FALSE,adownpressed=FALSE,start=FALSE,af1pressed=FALSE;
@@ -31,165 +26,6 @@ bool krdf[17]={FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
                FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE};
 
 
-#ifdef ARM
-
-#include "C:kernel.h"
-#define rightpressed (_kernel_osbyte(129,keycodes[0][0],255)&0xff==0xff)
-#define uppressed (_kernel_osbyte(129,keycodes[1][0],255)&0xff==0xff)
-#define leftpressed (_kernel_osbyte(129,keycodes[2][0],255)&0xff==0xff)
-#define downpressed (_kernel_osbyte(129,keycodes[3][0],255)&0xff==0xff)
-#define f1pressed (_kernel_osbyte(129,keycodes[4][0],255)&0xff==0xff)
-#define right2pressed (_kernel_osbyte(129,keycodes[5][0],255)&0xff==0xff)
-#define up2pressed (_kernel_osbyte(129,keycodes[6][0],255)&0xff==0xff)
-#define left2pressed (_kernel_osbyte(129,keycodes[7][0],255)&0xff==0xff)
-#define down2pressed (_kernel_osbyte(129,keycodes[8][0],255)&0xff==0xff)
-#define f12pressed (_kernel_osbyte(129,keycodes[9][0],255)&0xff==0xff)
-
-/* Default key codes for ARM */
-
-int keycodes[17][5]={{134,0,-2,-2,-2},   /* 1 Right */
-                     {198,0,-2,-2,-2},   /* 1 Up */
-                     {230,0,-2,-2,-2},   /* 1 Left */
-                     {214,0,-2,-2,-2},   /* 1 Down */
-                     {142,0,-2,-2,-2},   /* 1 Fire */
-                     {134,0,-2,-2,-2},   /* 2 Right */
-                     {198,0,-2,-2,-2},   /* 2 Up */
-                     {230,0,-2,-2,-2},   /* 2 Left */
-                     {214,0,-2,-2,-2},   /* 2 Down */
-                     {142,0,-2,-2,-2},   /* 2 Fire */
-                     {20,-2,-2,-2,-2},   /* Cheat */
-                     {43,-2,-2,-2,-2},   /* Accelerate */
-                     {45,-2,-2,-2,-2},   /* Brake */
-                     {137,-2,-2,-2,-2},  /* Music */
-                     {139,-2,-2,-2,-2},  /* Sound */
-                     {140,-2,-2,-2,-2},  /* Exit */
-                     {32,-2,-2,-2,-2}};  /* Pause */
-
-#define ASCIIF8 138
-
-/* This function exclusively used in keyboard redefinition */
-void findkey(int kn)
-{
-  int k=0,i,j;
-  bool f=FALSE;
-  do {
-    for (i=130;i<256 && !f;i++)
-      if (_kernel_osbyte(129,i,255)&0xff==0xff)
-        f=TRUE;
-    gretrace();
-    if (kbhit())
-      k=getkey();
-  } while (k==0 && !f);
-  j=i-1;
-  if (k==0) k=-2;
-  if (k>='a' && k<='z')
-    k-='a'-'A';
-  for (i=0;i<5;i++)
-    keycodes[kn][i]=-2;
-  if (kn>9)
-    i=0;
-  else {
-    i=2;
-    keycodes[kn][0]=j;
-    keycodes[kn][1]=0;
-  }
-  keycodes[kn][i++]=k;
-  if (k>='A' && k<='Z') {
-    keycodes[kn][i++]=k-('A'-'a'); /* lower case */
-    keycodes[kn][i++]=k-'@'; /* ctrl code */
-  }
-  krdf[kn]=TRUE;
-}
-
-#else
-
-#ifdef _WINDOWS
-
-#define rightpressed  (GetAsyncKeyState(keycodes[0][0]) & 0x8000)
-#define uppressed     (GetAsyncKeyState(keycodes[1][0]) & 0x8000)
-#define leftpressed   (GetAsyncKeyState(keycodes[2][0]) & 0x8000)
-#define downpressed   (GetAsyncKeyState(keycodes[3][0]) & 0x8000)
-#define f1pressed     (GetAsyncKeyState(keycodes[4][0]))
-#define right2pressed (GetAsyncKeyState(keycodes[5][0]) & 0x8000)
-#define up2pressed    (GetAsyncKeyState(keycodes[6][0]) & 0x8000)
-#define left2pressed  (GetAsyncKeyState(keycodes[7][0]) & 0x8000)
-#define down2pressed  (GetAsyncKeyState(keycodes[8][0]) & 0x8000)
-#define f12pressed    (GetAsyncKeyState(keycodes[9][0]))
-
-int keycodes[17][5]={{SDL_SCANCODE_RIGHT,VK_RIGHT+0x80,0x14d,-2,-2}, /* 1 Right */
-                     {SDL_SCANCODE_UP,VK_UP+0x80,-2,-2},             /* 1 Up */
-                     {SDL_SCANCODE_LEFT,VK_LEFT+0x80,0x14b,-2,-2},   /* 1 Left */
-                     {SDL_SCANCODE_DOWN,VK_DOWN+0x80,0x150,-2,-2},   /* 1 Down */
-                     {SDL_SCANCODE_F1,VK_F1+0x80,0x13b,-2,-2},       /* 1 Fire */
-                     {'S','S'+0x80,83,115,19},             /* 2 Right */
-                     {'W','W'+0x80,87,119,23},             /* 2 Up */
-                     {'A','A'+0x80,65,97,1},               /* 2 Left */
-                     {'Z','Z'+0x80,90,122,26},             /* 2 Down */
-                     {15,143,9,-2,-2},                     /* 2 Fire */
-                     {'T',-2,-2,-2,-2},                    /* Cheat */
-                     {VK_ADD,-2,-2,-2,-2},                 /* Accelerate */
-                     {VK_SUBTRACT,-2,-2,-2,-2},            /* Brake */
-                     {VK_F7,-2,-2,-2,-2},                  /* Music */
-                     {VK_F9,-2,-2,-2,-2},                  /* Sound */
-                     {VK_F10,-2,-2,-2,-2},                 /* Exit */
-                     {VK_SPACE,-2,-2,-2,-2}};              /* Pause */
-
-#define ASCIIF8 VK_F8
-
-#else
-
-#ifdef _VGL
-
-bool GetAsyncKeyState(int);
-
-#define RIGHTKEY	98+128
-#define UPKEY		95+128
-#define LEFTKEY		97+128
-#define DOWNKEY		100+128
-#define F1KEY		59+128
-#define TABKEY		15+128
-#define ADDKEY		78+128
-#define SUBKEY		74+128
-#define F7KEY		65+128
-#define F8KEY		66+128
-#define F9KEY		67+128
-#define F10KEY		68+128
-
-int keycodes[17][5]={{RIGHTKEY,-2,-2,-2,-2},		/* 1 Right */
-                     {UPKEY,-2,-2,-2,-2},		/* 1 Up */
-                     {LEFTKEY,-2,-2,-2,-2},		/* 1 Left */
-                     {DOWNKEY,-2,-2,-2,-2},		/* 1 Down */
-                     {F1KEY,-2,-2,-2,-2},		/* 1 Fire */
-                     {'s',-2,-2,-2,-2},			/* 2 Right */
-                     {'w',-2,-2,-2,-2},			/* 2 Up */
-                     {'a',-2,-2,-2,-2},			/* 2 Left */
-                     {'z',-2,-2,-2,-2},			/* 2 Down */
-                     {TABKEY,-2,-2,-2,-2},		/* 2 Fire */
-                     {'t',-2,-2,-2,-2},			/* Cheat */
-                     {ADDKEY,-2,-2,-2,-2},		/* Accelerate */
-                     {SUBKEY,-2,-2,-2,-2},		/* Brake */
-                     {F7KEY,-2,-2,-2,-2},		/* Music */
-                     {F9KEY,-2,-2,-2,-2},		/* Sound */
-                     {F10KEY,-2,-2,-2,-2},		/* Exit */
-                     {' ',-2,-2,-2,-2}};		/* Pause */
-
-#define rightpressed  (GetAsyncKeyState(keycodes[0][0]))
-#define uppressed     (GetAsyncKeyState(keycodes[1][0]))
-#define leftpressed   (GetAsyncKeyState(keycodes[2][0]))
-#define downpressed   (GetAsyncKeyState(keycodes[3][0]))
-#define f1pressed     (GetAsyncKeyState(keycodes[4][0]))
-#define right2pressed (GetAsyncKeyState(keycodes[5][0]))
-#define up2pressed    (GetAsyncKeyState(keycodes[6][0]))
-#define left2pressed  (GetAsyncKeyState(keycodes[7][0]))
-#define down2pressed  (GetAsyncKeyState(keycodes[8][0]))
-#define f12pressed    (GetAsyncKeyState(keycodes[9][0]))
-
-#define ASCIIF8 F8KEY
-
-#else
-
-#ifdef _SDL
-
 bool GetAsyncKeyState(int);
 
 int keycodes[17][5]={{SDL_SCANCODE_RIGHT,-2,-2,-2,-2},		/* 1 Right */
@@ -210,7 +46,7 @@ int keycodes[17][5]={{SDL_SCANCODE_RIGHT,-2,-2,-2,-2},		/* 1 Right */
                      {SDL_SCANCODE_F10,-2,-2,-2,-2},		/* Exit */
                      {SDL_SCANCODE_SPACE,-2,-2,-2,-2}};		/* Pause */
 
-#define ASCIIF8 SDLK_F8
+#define ASCIIF8 SDL_SCANCODE_F8
 
 #define rightpressed  (GetAsyncKeyState(keycodes[0][0]))
 #define uppressed     (GetAsyncKeyState(keycodes[1][0]))
@@ -223,104 +59,12 @@ int keycodes[17][5]={{SDL_SCANCODE_RIGHT,-2,-2,-2,-2},		/* 1 Right */
 #define down2pressed  (GetAsyncKeyState(keycodes[8][0]))
 #define f12pressed    (GetAsyncKeyState(keycodes[9][0]))
 
-#else
-
-bool leftpressed=FALSE,rightpressed=FALSE,uppressed=FALSE,downpressed=FALSE,
-     f1pressed=FALSE,left2pressed=FALSE,right2pressed=FALSE,up2pressed=FALSE,
-     down2pressed=FALSE,f12pressed=FALSE;
-
-/* Default key codes */
-
-int keycodes[17][5]={{0x4d,0xcd,0x14d,-2,-2}, /* 1 Right */
-                     {0x48,0xc8,0x148,-2,-2}, /* 1 Up */
-                     {0x4b,0xcb,0x14b,-2,-2}, /* 1 Left */
-                     {0x50,0xd0,0x150,-2,-2}, /* 1 Down */
-                     {0x3b,0xbb,0x13b,-2,-2}, /* 1 Fire */
-                     {31,159,83,115,19},      /* 2 Right */
-                     {17,145,87,119,23},      /* 2 Up */
-                     {30,158,65,97,1},        /* 2 Left */
-                     {44,172,90,122,26},      /* 2 Down */
-                     {15,143,9,-2,-2},        /* 2 Fire */
-                     {20,-2,-2,-2,-2},        /* Cheat */
-                     {43,-2,-2,-2,-2},        /* Accelerate */
-                     {45,-2,-2,-2,-2},        /* Brake */
-                     {321,-2,-2,-2,-2},       /* Music */
-                     {323,-2,-2,-2,-2},       /* Sound */
-                     {324,-2,-2,-2,-2},       /* Exit */
-                     {32,-2,-2,-2,-2}};       /* Pause */
-
-#define ASCIIF8 322
-
-#endif
-#endif
-#endif
-
 
 Uint4 scancode;
 
 int pki;
 
-#if !defined(_WINDOWS) && !defined(_SDL) && !defined(_VGL)
-bool *flagp[10]={
-  &rightpressed,&uppressed,&leftpressed,&downpressed,&f1pressed,
-  &right2pressed,&up2pressed,&left2pressed,&down2pressed,&f12pressed};
-
-/* We need to know when keys are released so we know when to stop.
-   This routine is only called on platforms where keyboard makes and breaks
-   cause interrupts (this being the handler). On platforms where makes and
-   breaks set and release flags, these "variables" are actually macros linking
-   to these flags (they are each only read once).
-*/
-void processkey(Uint4 key)
-{
-  for (pki=0;pki<10;pki++) {
-    if (key==keycodes[pki][0]) /* Make */
-      *flagp[pki]=TRUE;
-    if (key==keycodes[pki][1]) /* Break */
-      *flagp[pki]=FALSE;
-  }
-  scancode=key;
-}
-#endif
-
-#if !defined(_SDL) && !defined(_VGL)
-/* This function exclusively used in keyboard redefinition */
-void findkey(int kn)
-{
-  int k=0,i;
-  scancode=0;
-  do
-    if (kbhit())
-      k=getkey();
-  while (k==0 && (scancode==0 || scancode&0x80));
-  if (kbhit())
-    k=getkey();
-  if (k==0)
-    k=-2;
-  if (k>='a' && k<='z')
-    k-='a'-'A';
-  for (i=0;i<5;i++)
-    keycodes[kn][i]=-2;
-  if (kn>9)
-    i=0;
-  else {
-    i=2;
-    keycodes[kn][0]=scancode&0x7f;
-    keycodes[kn][1]=scancode|0x80;
-  }
-  keycodes[kn][i++]=k;
-  if (k>='A' && k<='Z') {
-    keycodes[kn][i++]=k-('A'-'a'); /* lower case */
-    keycodes[kn][i]=k-'@'; /* ctrl code */
-  }
-  krdf[kn]=TRUE;
-}
-#else /* SDL & FBSD */
 void findkey(int kn) { keycodes[kn][0] = getkey(); }
-#endif
-
-#endif
-
 
 void readjoy(void);
 

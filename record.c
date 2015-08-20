@@ -11,19 +11,7 @@
 #include "scores.h"
 #include "sprite.h"
 
-#ifndef FLATFILE
-#if defined (_WINDOWS) && !defined (WIN32)
-#include <malloc.h>
-#else
-#include <alloc.h>
-#endif
-#endif
-
-#ifdef _WINDOWS
-#include "win_dig.h"
-#endif
-
-char huge *recb,huge *plb,huge *plp;
+char *recb,*plb,*plp;
 
 bool playing=FALSE,savedrf=FALSE,gotname=FALSE,gotgame=FALSE,drfvalid=TRUE,
      kludge=FALSE;
@@ -38,11 +26,7 @@ void mprintf(char *f,...);
 void makedir(Sint4 *dir,bool *fire,char d);
 char maked(Sint4 dir,bool fire);
 
-#ifdef ARM
-#define DEFAULTSN "Digger:Lastgame"
-#else
 #define DEFAULTSN "DIGGER.DRF"
-#endif
 
 #ifdef INTDRF
 FILE *info;
@@ -126,8 +110,8 @@ void openplay(char *name)
   fseek(playf,0,SEEK_END);
   l=ftell(playf)-i;
   fseek(playf,i,SEEK_SET);
-  plb=plp=(char huge *)farmalloc(l);
-  if (plb==(char huge *)NULL) {
+  plb=plp=(char*)malloc(l);
+  if (plb==(char*)NULL) {
     fclose(playf);
     escape=TRUE;
     return;
@@ -146,7 +130,7 @@ void openplay(char *name)
   game();
   gotgame=TRUE;
   playing=FALSE;
-  farfree(plb);
+  free(plb);
   gauntlet=origg;
   gtime=origgtime;
   kludge=FALSE;
@@ -157,27 +141,15 @@ void openplay(char *name)
 
 void recstart(void)
 {
-#if defined FLATFILE || defined WIN16
   Uint5 s=MAX_REC_BUFFER;
   do {
-    recb=(char huge *)farmalloc(s);
+    recb=(char*)malloc(s);
     if (recb==NULL)
       s>>=1;
-  } while (recb==(char huge *)NULL && s>1024);
-#else
-  Uint5 s=farcoreleft();
-  if (s>MAX_REC_BUFFER)
-    s=MAX_REC_BUFFER;
-  recb=(char huge *)farmalloc(s);
-#endif
+  } while (recb==(char*)NULL && s>1024);
   if (recb==NULL) {
     finish();
-#ifdef _WINDOWS
-    MessageBox(hWnd, "Cannot allocate memory for recording buffer.\n", "Error",
-               MB_OK);
-#else
     printf("Cannot allocate memory for recording buffer.\n");
-#endif
     exit(1);
   }
   recp=0;
@@ -363,9 +335,6 @@ void recsavedrf(void)
             sprintf(nambuf,"%c%c%li",init[1],init[2],scoret);
           else
             sprintf(nambuf,"%c%c%li",init[0],init[2],scoret);
-#ifndef ARM
-      strcat(nambuf,".drf");
-#endif
       recf=fopen(nambuf,"wt");
     }
     if (recf==NULL)

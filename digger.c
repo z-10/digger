@@ -10,10 +10,6 @@
 #include "scores.h"
 #include "bags.h"
 
-#ifdef _WINDOWS
-#include "win_dig.h"
-#endif
-
 struct digger
 {
   Sint4 x,y,h,v,rx,ry,mdir,dir,bagtime,rechargetime,fx,fy,fdir,expsn,
@@ -77,15 +73,9 @@ Uint5 frame;
 
 void newframe(void)
 {
-
-#ifndef ARM
-
   Uint5 t;
   if (synchvid) {
     for (;curtime<ftime;curtime+=17094) { /* 17094 = ticks in a refresh */
-#ifdef _WINDOWS
-      do_windows_events();
-#endif
       fillbuffer();
       gretrace();
       checkkeyb();
@@ -95,28 +85,12 @@ void newframe(void)
   }
   else {
     do {
-#ifdef _WINDOWS
-      do_windows_events();
-#endif
       fillbuffer();             /* Idle time */
       t=gethrt();
       checkkeyb();
     } while (curtime+ftime>t && t>curtime);
     curtime=t;
   }
-
-#else
-
-  for (;curtime<ftime;curtime+=15000) {
-    fillbuffer();
-    gretrace();
-    soundint();
-    checkkeyb();
-  }
-  curtime-=ftime;
-
-#endif
-
 #ifdef INTDRF
   frame++;
 #endif
@@ -261,7 +235,7 @@ void updatefire(int n)
         for (i=0;i<7;i++)
           pix|=ggetpix(digdat[n].fx,digdat[n].fy+i);
         pix&=0x3;
-        break;       
+        break;
     }
     drawfire(n-curplayer,digdat[n].fx,digdat[n].fy,0);
     for (i=0;i<TYPES;i++)

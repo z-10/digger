@@ -22,17 +22,13 @@ bool setsounddevice(int base, int irq, int dma, Uint4 samprate, Uint4 bufsize)
 {
 	SDL_AudioSpec wanted;
 	bool result = FALSE;
-	
+
 	wanted.freq = samprate;
 	wanted.samples = bufsize;
 	wanted.channels = 1;
 	wanted.format = AUDIO_U8;
 	wanted.userdata = NULL;
 	wanted.callback = fill_audio;
-
-#ifdef _VGL
-	restorekeyb();
-#endif
 
 	if ((SDL_Init(SDL_INIT_AUDIO)) >= 0)
 		if ((SDL_OpenAudio(&wanted, NULL)) >= 0)
@@ -44,10 +40,6 @@ bool setsounddevice(int base, int irq, int dma, Uint4 samprate, Uint4 bufsize)
 		bsize = bufsize;
 		wave_device_available = TRUE;
 	}
-
-#ifdef _VGL
-	initkeyb();
-#endif
 
 	return(result);
 }
@@ -69,4 +61,3 @@ void killsounddevice(void)
 {
 	SDL_PauseAudio(1);
 }
-

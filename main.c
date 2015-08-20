@@ -17,12 +17,6 @@
 #include "newsnd.h"
 #include "ini.h"
 
-#ifdef _WINDOWS
-#include "win_dig.h"
-#include "win_snd.h"
-#include "win_vid.h"
-#endif
-
 struct game
 {
   Sint4 level;
@@ -155,9 +149,6 @@ void game(void)
 {
   Sint4 t,c,i;
   bool flashplayer=FALSE;
-#ifdef _WINDOWS
-  show_game_menu();
-#endif
   if (gauntlet) {
     cgtime=gtime*1193181l;
     timeout=FALSE;
@@ -311,22 +302,17 @@ void maininit(void)
   recstart();
 }
 
-#ifndef _WINDOWS
 int main(int argc,char *argv[])
 {
   maininit();
   parsecmd(argc,argv);
   return mainprog();
 }
-#endif
 
 int mainprog(void)
 {
   Sint4 frame,t,x;
   loadscores();
-#ifdef _WINDOWS
-  show_main_menu();
-#endif
   escape=FALSE;
   do {
     soundstop();
@@ -421,9 +407,6 @@ int mainprog(void)
       break;
     recinit();
     game();
-#ifdef _WINDOWS
-    show_main_menu();
-#endif
     gotgame=TRUE;
     if (gotname) {
       recsavedrf();
@@ -443,9 +426,6 @@ void finish(void)
   soundkillglob();
   restorekeyb();
   graphicsoff();
-#ifdef _WINDOWS
-  windows_finish();
-#endif
 }
 
 void shownplayers(void)
@@ -643,14 +623,11 @@ void parsecmd(int argc,char *argv[])
         sscanf(word+i,"%u",&startlev);
       if (word[1]=='U' || word[1]=='u')
         unlimlives=TRUE;
-#ifndef _WINDOWS        
       if (word[1]=='?' || word[1]=='h' || word[1]=='H') {
         finish();
+        
         printf("DIGGER - Copyright (c) 1983 Windmill software\n"
                "Restored 1998 by AJ Software\n"
-#ifdef ARM
-               "Acorn port by Julian Brown\n"
-#endif
                "http://www.digger.org\n"
                "Version: "DIGGER_VERSION"\n\n"
 
@@ -661,10 +638,6 @@ void parsecmd(int argc,char *argv[])
                                                            "[/G[:time]] [/2]\n"
                "         [/A:device,port,irq,dma,rate,length] [/V] [/U] "
                                                                "[/I:level]\n\n"
-#ifndef UNIX
-               "/C = Use CGA graphics\n"
-               "/B = Use BIOS palette functions for CGA (slow!)\n"
-#endif
                "/Q = Quiet mode (no sound at all)       "
                "/M = No music\n"
                "/R = Record graphics to file\n"
@@ -675,21 +648,16 @@ void parsecmd(int argc,char *argv[])
                "/G = Gauntlet mode\n"
                "/2 = Two player simultaneous mode\n"
                "/A = Use alternate sound device\n"
-#ifndef UNIX
-               "/V = Synchronize timing to vertical retrace\n"
-#endif
                "/U = Allow unlimited lives\n"
                "/I = Start on a level other than 1\n");
         exit(1);
       }
-#endif      
       if (word[1]=='Q' || word[1]=='q')
         soundflag=FALSE;
       if (word[1]=='M' || word[1]=='m')
         musicflag=FALSE;
       if (word[1]=='2')
         diggers=2;
-#ifndef _WINDOWS
       if (word[1]=='B' || word[1]=='b' || word[1]=='C' || word[1]=='c') {
         ginit=cgainit;
         gpal=cgapal;
@@ -732,7 +700,6 @@ void parsecmd(int argc,char *argv[])
       }
       if (word[1]=='V' || word[1]=='v')
         synchvid=TRUE;
-#endif
       if (word[1]=='G' || word[1]=='g') {
         gtime=0;
         while (word[i]!=0)
@@ -803,10 +770,8 @@ char *keynames[17]={"Right","Up","Left","Down","Fire",
                     "Right","Up","Left","Down","Fire",
                     "Cheat","Accel","Brake","Music","Sound","Exit","Pause"};
 
-#ifndef _WINDOWS
 int dx_sound_volume;
 bool g_bWindowed,use_640x480_fullscreen,use_async_screen_updates;
-#endif
 
 void inir(void)
 {
@@ -869,42 +834,15 @@ void inir(void)
     timer2=s1timer2;
     soundinitglob(sound_port,sound_irq,sound_dma,sound_length,sound_rate);
   }
-#ifdef _WINDOWS
-  dx_sound_volume=(int)GetINIInt(INI_SOUND_SETTINGS,"SoundVolume",100,ININAME);
-  set_sound_volume(dx_sound_volume);
-#else
   dx_sound_volume=(int)GetINIInt(INI_SOUND_SETTINGS,"SoundVolume",0,ININAME);
-#endif
-#ifndef DIRECTX
   g_bWindowed=TRUE;
-#else  
-  g_bWindowed=!GetINIBool(INI_GRAPHICS_SETTINGS,"FullScreen",FALSE,ININAME);
-#endif  
   use_640x480_fullscreen=GetINIBool(INI_GRAPHICS_SETTINGS,"640x480",FALSE,
                                     ININAME);
-#ifdef DIRECTX
-  if (!g_bWindowed)
-    ChangeCoopLevel();
-#endif
   use_async_screen_updates=GetINIBool(INI_GRAPHICS_SETTINGS,"Async",TRUE,
                                       ININAME);
   synchvid=GetINIBool(INI_GRAPHICS_SETTINGS,"Synch",FALSE,ININAME);
   cgaflag=GetINIBool(INI_GRAPHICS_SETTINGS,"CGA",FALSE,ININAME);
   biosflag=GetINIBool(INI_GRAPHICS_SETTINGS,"BIOSPalette",FALSE,ININAME);
-  if (cgaflag || biosflag) {
-    ginit=cgainit;
-    gpal=cgapal;
-    ginten=cgainten;
-    gclear=cgaclear;
-    ggetpix=cgagetpix;
-    gputi=cgaputi;
-    ggeti=cgageti;
-    gputim=cgaputim;
-    gwrite=cgawrite;
-    gtitle=cgatitle;
-    ginit();
-    gpal(0);
-  }
   unlimlives=GetINIBool(INI_GAME_SETTINGS,"UnlimitedLives",FALSE,ININAME);
   startlev=(int)GetINIInt(INI_GAME_SETTINGS,"StartLevel",1,ININAME);
 }

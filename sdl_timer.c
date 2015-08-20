@@ -1,9 +1,7 @@
 #include <SDL.h>
 
 #include "def.h"
-#ifdef _SDL
 #include "sdl_vid.h"
-#endif
 
 Uint32 prev = 0;
 extern Uint5 ftime;
@@ -84,4 +82,3 @@ void s0timer2(Sint4 t0v)
 void s0soundkillglob(void)
 {
 }
-

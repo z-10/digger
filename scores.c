@@ -12,10 +12,6 @@
 #include "digger.h"
 #include "record.h"
 
-#ifdef _WINDOWS
-#include "win_dig.h"
-#endif
-
 struct scdat
 {
   Sint5 score,nextbs;
@@ -47,23 +43,7 @@ void shufflehigh(void);
 void writenum(Sint5 n,Sint4 x,Sint4 y,Sint4 w,Sint4 c);
 void digger_numtostring(char *p,Sint5 n);
 
-#ifdef ARM
-
-#define SFNAME "Digger:Scores"
-
-#elif defined FREEBSD && defined _VGL
-
-#define SFNAME "/var/games/digger/digger.sco"
-
-#elif defined UNIX && !defined _VGL
-
-#define SFNAME strncat(strncpy(malloc(PATH_MAX),getenv("HOME"),PATH_MAX),"/.digger.sco",PATH_MAX)
-
-#else
-
 #define SFNAME "DIGGER.SCO"
-
-#endif
 
 #ifdef INTDRF
 Sint5 getscore0(void)
@@ -275,9 +255,6 @@ void savescores(void)
 void getinitials(void)
 {
   Sint4 k,i;
-#ifdef _WINDOWS
-  pause_windows_sound_playback();
-#endif
   newframe();
   outtext("ENTER YOUR",100,70,3);
   outtext(" INITIALS",100,90,3);
@@ -300,20 +277,13 @@ void getinitials(void)
     }
   }
   for (i=0;i<20;i++)
-#ifdef _WINDOWS
-    flashywait(2);
-#else
     flashywait(15);
-#endif
   setupsound();
   gclear();
   gpal(0);
   ginten(0);
   setretr(TRUE);
   recputinit(scoreinit[0]);
-#ifdef _WINDOWS
-  resume_windows_sound_playback();
-#endif
 }
 
 void flashywait(Sint4 n)
@@ -324,12 +294,7 @@ void flashywait(Sint4 n)
   for (i=0;i<(n<<1);i++)
     for (cx=0;cx<volume;cx++) {
       gpal(p=1-p);
-#ifdef _WINDOWS
-      for (gt=0;gt<gap;gt++)
-        do_windows_events();
-#else
       for (gt=0;gt<gap;gt++);
-#endif
     }
 }
 
@@ -338,30 +303,17 @@ Sint4 getinitial(Sint4 x,Sint4 y)
   Sint4 i;
   gwrite(x,y,'_',3);
   do {
-
-#ifdef _WINDOWS
-    do_windows_events();
-#endif
-
     for (i=0;i<40;i++) {
       if (kbhit())
         return getkey();
-#ifdef _WINDOWS
-      flashywait(5);
-#else
       flashywait(15);
-#endif
     }
     for (i=0;i<40;i++) {
       if (kbhit()) {
         gwrite(x,y,'_',3);
         return getkey();
       }
-#ifdef _WINDOWS
-      flashywait(5);
-#else
       flashywait(15);
-#endif
     }
   } while (1);
 }
