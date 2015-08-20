@@ -35,7 +35,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 link_libraries(${LIBS} ${SDL2_LIBRARY} z objc)
 set(SOURCE_FILES ${SOURCE_FILES} fbsd_sup.c)
-add_definitions(-DDARWIN )
+add_definitions(-DDARWIN -D_SDL)
 
 #todo : add windows
 

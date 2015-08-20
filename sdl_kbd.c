@@ -40,11 +40,11 @@ int Handler(void* userdata, SDL_Event *event)
 
 bool GetAsyncKeyState(int key)
 {
-	Uint8 *keys;
+	const Uint8 *keys;
 
 	SDL_PumpEvents();
 	keys = SDL_GetKeyboardState(NULL);
-	if (keys[key] == SDL_PRESSED )
+	if (keys[key])
 		return(TRUE);
 	else
 		return(FALSE);
