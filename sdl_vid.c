@@ -19,7 +19,6 @@
 #include "hardware.h"
 #include "title_gz.h"
 #include "icon.h"
-
 extern Uint3 *vgatable[];
 extern Uint3 *ascii2vga[];
 
@@ -38,24 +37,24 @@ Sint4 wratio = 2;
 
 /* palette1, normal intensity */
 SDL_Color vga16_pal1[] = \
-{{0,0,0,0},{0,0,128,0},{0,128,0,0},{0,128,128,0},{128,0,0,0},{128,0,128,0} \
-,{128,64,0,0},{128,128,128,0},{64,64,64,0},{0,0,255,0},{0,255,0,0} \
-,{0,255,255,0},{255,0,0,0},{255,0,255,0},{255,255,0,0},{255,255,255,0}};
+{{0,0,0,255},{0,0,128,255},{0,128,0,255},{0,128,128,255},{128,0,0,255},{128,0,128,255} \
+,{128,64,0,255},{128,128,128,255},{64,64,64,255},{0,0,255,255},{0,255,0,255} \
+,{0,255,255,255},{255,0,0,255},{255,0,255,255},{255,255,0,255},{255,255,255,255}};
 /* palette1, high intensity */
 SDL_Color vga16_pal1i[] = \
-{{0,0,0,0},{0,0,255,0},{0,255,0,0},{0,255,255,0},{255,0,0,0},{255,0,255,0} \
-,{255,128,0,0},{196,196,196,0},{128,128,128,0},{128,128,255,0},{128,255,128,0} \
-,{128,255,255,0},{255,128,128,0},{255,128,255,0},{255,255,128,0},{255,255,255,0}};
+{{0,0,0,255},{0,0,255,255},{0,255,0,255},{0,255,255,255},{255,0,0,255},{255,0,255,255} \
+,{255,128,0,255},{196,196,196,255},{128,128,128,255},{128,128,255,255},{128,255,128,255} \
+,{128,255,255,255},{255,128,128,255},{255,128,255,255},{255,255,128,255},{255,255,255,255}};
 /* palette2, normal intensity */
 SDL_Color vga16_pal2[] = \
-{{0,0,0,0},{0,128,0,0},{128,0,0,0},{128,64,0,0},{0,0,128,0},{0,128,128,0} \
-,{128,0,128,0},{128,128,128,0},{64,64,64,0},{0,255,0,0},{255,0,0,0} \
-,{255,255,0,0},{0,0,255,0},{0,255,255,0},{255,0,255,0},{255,255,255,0}};
+{{0,0,0,255},{0,128,0,255},{128,0,0,255},{128,64,0,255},{0,0,128,255},{0,128,128,255} \
+,{128,0,128,255},{128,128,128,255},{64,64,64,255},{0,255,0,255},{255,0,0,255} \
+,{255,255,0,255},{0,0,255,255},{0,255,255,255},{255,0,255,255},{255,255,255,255}};
 /* palette2, high intensity */
 SDL_Color vga16_pal2i[] = \
-{{0,0,0,0},{0,255,0,0},{255,0,0,0},{255,128,0,0},{0,0,255,0},{0,255,255,0} \
-,{255,0,255,0},{196,196,196,0},{128,128,128,0},{128,255,128,0},{255,128,128,0} \
-,{255,255,128,0},{128,128,255,0},{128,255,255,0},{255,128,255,0},{255,255,255,0}};
+{{0,0,0,255},{0,255,0,255},{255,0,0,255},{255,128,0,255},{0,0,255,255},{0,255,255,255} \
+,{255,0,255,255},{196,196,196,255},{128,128,128,255},{128,255,128,255},{255,128,128,255} \
+,{255,255,128,255},{128,128,255,255},{128,255,255,255},{255,128,255,255},{255,255,255,255}};
 
 SDL_Color *npalettes[] = {vga16_pal1, vga16_pal2};
 SDL_Color *ipalettes[] = {vga16_pal1i, vga16_pal2i};
@@ -63,7 +62,7 @@ Sint4	currpal=0;
 
 Uint32	addflag=0;
 
-SDL_Surface *screen = NULL;
+SDL_Surface *screen, *helper = NULL;
 SDL_Window *sdlWindow = NULL;
 SDL_Renderer *sdlRenderer = NULL;
 SDL_Texture *sdlTexture = NULL;
@@ -88,7 +87,6 @@ SDL_Surface *ch2bmap(Uint3 *sprite, Sint4 w, Sint4 h)
 	realh = virt2scrh(h);
 	tmp = SDL_CreateRGBSurfaceFrom(sprite, realw, realh, 8, realw, 0, 0, 0, 0);
 	SDL_SetPaletteColors(tmp->format->palette, screen->format->palette->colors, 0, screen->format->palette->ncolors);
-
 	return(tmp);
 }
 
@@ -186,13 +184,10 @@ void vgainit(void)
 		fprintf(stderr, "Couldn't initialize SDL texture: %s\n", SDL_GetError());
 		exit(1);
 	}
-	screen = SDL_CreateRGBSurface(0, 640, 480, 8,
-                                        0,
-                                        0,
-                                        0,
-                                        0);
+	screen = SDL_CreateRGBSurface(0, 640, 480, 8, 0, 0, 0, 0);
+	helper = SDL_CreateRGBSurface(0, 640, 480, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 
-	if(screen == NULL)
+	if(screen == NULL || helper == NULL)
 	{
 		fprintf(stderr, "Couldn't initialize SDL surface: %s\n", SDL_GetError());
 		exit(1);
@@ -244,7 +239,8 @@ void doscreenupdate(void)
 		p = First;
 	}
 	pendnum = 0;
-	SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+	SDL_BlitSurface(screen, NULL, helper, NULL);
+	SDL_UpdateTexture(sdlTexture, NULL, helper->pixels, helper->pitch);
 	SDL_RenderClear(sdlRenderer);
 	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
 	SDL_RenderPresent(sdlRenderer);
