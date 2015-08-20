@@ -142,18 +142,18 @@ void switchmode(void)
 void vgainit(void)
 {
 
+	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+		fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
+		exit(1);
+	}
 
 	SDL_Surface *tmp = NULL;
 
 	tmp = SDL_CreateRGBSurfaceFrom(Icon, 64, 64, 8, 64, 0, 0, 0, 0);
 	SDL_SetColorKey(tmp, SDL_TRUE, 247);
+	SDL_SetPaletteColors(tmp->format->palette, IconPalette, 0, 256);
+	SDL_SaveBMP(tmp, "icon.bmp");
 
-	tmp->format->palette->colors = IconPalette;
-
-	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-		fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-		exit(1);
-	}
 	sdlWindow = SDL_CreateWindow("D I G G E R",
                              SDL_WINDOWPOS_UNDEFINED,
                              SDL_WINDOWPOS_UNDEFINED,

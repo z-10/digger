@@ -31,11 +31,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIR})
-link_libraries(${LIBS} ${SDL2_LIBRARY} z objc)
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
+link_libraries(${LIBS} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} z objc)
 set(SOURCE_FILES ${SOURCE_FILES} fbsd_sup.c)
-add_definitions(-DDARWIN -D_SDL)
 
 #todo : add windows
 
