@@ -63,19 +63,19 @@ void s0setspkrt2(void)
 {
 }
 
-void s0settimer0(Sint4 t0v)
+void s0settimer0(Uint4 t0v)
 {
 }
 
-void s0settimer2(Sint4 t0v)
+void s0settimer2(Uint4 t0v)
 {
 }
 
-void s0timer0(Sint4 t0v)
+void s0timer0(Uint4 t0v)
 {
 }
 
-void s0timer2(Sint4 t0v)
+void s0timer2(Uint4 t0v)
 {
 }
 

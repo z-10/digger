@@ -36,7 +36,7 @@ bool setsounddevice(int base, int irq, int dma, Uint4 samprate, Uint4 bufsize)
 	if (result == FALSE)
 		fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
 	else {
-		buf = malloc(bufsize);
+		buf = new samp[bufsize];
 		bsize = bufsize;
 		wave_device_available = TRUE;
 	}

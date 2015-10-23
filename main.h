@@ -15,6 +15,6 @@ extern bool levfflag;
 extern char levfname[];
 extern char pldispbuf[];
 extern Sint5 randv;
-extern Sint3 leveldat[8][10][15];
+extern Sint3 leveldat[8][10][16];
 extern int gtime;
 extern bool gauntlet,timeout,synchvid,unlimlives;

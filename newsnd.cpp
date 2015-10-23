@@ -51,7 +51,7 @@ void soundinitglob(int port,int irq,int dma,Uint4 bufsize,Uint4 samprate)
 {
   int i;
   setsounddevice(port,irq,dma,samprate,bufsize);
-  buffer=malloc((bufsize<<1)*sizeof(samp));
+  buffer= new samp[((bufsize<<1)*sizeof(samp))];
   rate=(int)(0x1234ddul/(Uint5)samprate);
   firsts=0;
   last=1;

@@ -69,8 +69,8 @@ SDL_Texture *sdlTexture = NULL;
 
 /* Data structure holding pending updates */
 struct PendNode {
-	void *prevnode;
-	void *nextnode;
+	PendNode *prevnode;
+	PendNode *nextnode;
 	SDL_Rect rect;
 };
 
@@ -250,19 +250,19 @@ void vgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
 {
 	SDL_Surface *tmp;
 	SDL_Palette *reserv;
-	struct PendNode *new, *ptr;
+	struct PendNode *newPtr, *ptr;
 
-	new = malloc(sizeof (struct PendNode));
-	memset(new, 0x00, (sizeof (struct PendNode)));
-	new->rect.x = virt2scrx(x);
-	new->rect.y = virt2scry(y);
-	new->rect.w = virt2scrw(w*4);
-	new->rect.h = virt2scrh(h);
+	newPtr = new PendNode();
+	memset(newPtr, 0x00, (sizeof (struct PendNode)));
+	newPtr->rect.x = virt2scrx(x);
+	newPtr->rect.y = virt2scry(y);
+	newPtr->rect.w = virt2scrw(w*4);
+	newPtr->rect.h = virt2scrh(h);
 
 	memcpy(&tmp, p, (sizeof (SDL_Surface *)));
 	reserv = tmp->format->palette;
 	tmp->format->palette = screen->format->palette;
-	SDL_BlitSurface(tmp, NULL, screen, &new->rect);
+	SDL_BlitSurface(tmp, NULL, screen, &newPtr->rect);
 	tmp->format->palette = reserv;
 /*
  * Following piece of code comparing already pending updates with current with
@@ -270,33 +270,33 @@ void vgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
  */
 
 	for(ptr=First;ptr!=NULL;ptr=ptr->nextnode) {
-		if((new->rect.x >= ptr->rect.x) &&
-		   (new->rect.y >= ptr->rect.y) &&
-		   ((new->rect.x+new->rect.w) <= (ptr->rect.x+ptr->rect.w)) &&
-		   ((new->rect.y+new->rect.h) <= (ptr->rect.y+ptr->rect.h))) {
-			free(new);
+		if((newPtr->rect.x >= ptr->rect.x) &&
+		   (newPtr->rect.y >= ptr->rect.y) &&
+		   ((newPtr->rect.x+newPtr->rect.w) <= (ptr->rect.x+ptr->rect.w)) &&
+		   ((newPtr->rect.y+newPtr->rect.h) <= (ptr->rect.y+ptr->rect.h))) {
+			delete newPtr;
 			return;
-		} else if((new->rect.x <= ptr->rect.x) &&
-		   (new->rect.y <= ptr->rect.y) &&
-		   ((new->rect.x+new->rect.w) >= (ptr->rect.x+ptr->rect.w)) &&
-		   ((new->rect.y+new->rect.h) >= (ptr->rect.y+ptr->rect.h))) {
-			ptr->rect.x = new->rect.x;
-			ptr->rect.y = new->rect.y;
-			ptr->rect.w = new->rect.w;
-			ptr->rect.h = new->rect.h;
-			free(new);
+		} else if((newPtr->rect.x <= ptr->rect.x) &&
+		   (newPtr->rect.y <= ptr->rect.y) &&
+		   ((newPtr->rect.x+newPtr->rect.w) >= (ptr->rect.x+ptr->rect.w)) &&
+		   ((newPtr->rect.y+newPtr->rect.h) >= (ptr->rect.y+ptr->rect.h))) {
+			ptr->rect.x = newPtr->rect.x;
+			ptr->rect.y = newPtr->rect.y;
+			ptr->rect.w = newPtr->rect.w;
+			ptr->rect.h = newPtr->rect.h;
+			free(newPtr);
 			return;
 		}
 	}
 
 	if (pendnum == 0)
-		First = new;
+		First = newPtr;
 	else {
-		Last->nextnode = new;
-		new->prevnode = Last;
+		Last->nextnode = newPtr;
+		newPtr->prevnode = Last;
 	}
 
-	Last = new;
+	Last = newPtr;
 	pendnum++;
 }
 
@@ -384,7 +384,7 @@ void vgawrite(Sint4 x, Sint4 y, Sint4 ch, Sint4 c)
 		return;
 	tmp = ch2bmap(alphas[ch-32], w, h);
 	size = tmp->w*tmp->h;
-	copy = malloc(size);
+	copy = new Uint8[size];
 	memcpy(copy, tmp->pixels, size);
 
 	for(i = size;i!=0;) {
@@ -420,7 +420,7 @@ void vgatitle(void)
 	SDL_Surface *tmp=NULL;
 
 	vgageti(0, 0, (Uint3 *)&tmp, 80, 200);
-	gettitle(tmp->pixels);
+	gettitle((unsigned char*)tmp->pixels);
 	vgaputi(0, 0, (Uint3 *)&tmp, 80, 200);
 	SDL_FreeSurface(tmp);
 }

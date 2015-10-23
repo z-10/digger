@@ -9,9 +9,9 @@
 #undef FALSE
 #endif
 
-#define TRUE -1
-#define FALSE 0
-typedef int bool;
+#define TRUE true
+#define FALSE false
+
 
 typedef signed char Sint3;
 typedef unsigned char Uint3;

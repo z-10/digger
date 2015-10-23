@@ -52,7 +52,7 @@ void inir(void);
 void redefkeyb(bool allf);
 int getalllives(void);
 
-Sint3 leveldat[8][MHEIGHT][MWIDTH]=
+Sint3 leveldat[8][MHEIGHT][MWIDTH+1]=
 {{"S   B     HHHHS",
   "V  CC  C  V B  ",
   "VB CC  C  V    ",
@@ -625,7 +625,7 @@ void parsecmd(int argc,char *argv[])
         unlimlives=TRUE;
       if (word[1]=='?' || word[1]=='h' || word[1]=='H') {
         finish();
-        
+
         printf("DIGGER - Copyright (c) 1983 Windmill software\n"
                "Restored 1998 by AJ Software\n"
                "http://www.digger.org\n"
