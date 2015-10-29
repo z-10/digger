@@ -102,7 +102,7 @@ bool setmode(void)
 	{
 		if(addflag == 0)
 		{
-			SDL_SetWindowSize(sdlWindow, 640, 480);
+			SDL_SetWindowSize(sdlWindow, 800, 600);
 		}
 		return(true);
 	}
@@ -152,7 +152,6 @@ void vgainit(void)
 	tmp = SDL_CreateRGBSurfaceFrom(Icon, 64, 64, 8, 64, 0, 0, 0, 0);
 	SDL_SetColorKey(tmp, SDL_TRUE, 247);
 	SDL_SetPaletteColors(tmp->format->palette, IconPalette, 0, 256);
-	SDL_SaveBMP(tmp, "icon.bmp");
 
 	sdlWindow = SDL_CreateWindow("D I G G E R",
                              SDL_WINDOWPOS_UNDEFINED,
