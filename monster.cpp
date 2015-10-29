@@ -19,7 +19,7 @@ struct monster
 Sint4 nextmonster=0,totalmonsters=0,maxmononscr=0,nextmontime=0,mongaptime=0;
 Sint4 chase=0;
 
-bool unbonusflag=FALSE;
+bool unbonusflag=false;
 
 void createmonster(void);
 void monai(Sint4 mon);
@@ -32,7 +32,7 @@ void initmonsters(void)
 {
   Sint4 i;
   for (i=0;i<MONSTERS;i++)
-    mondat[i].flag=FALSE;
+    mondat[i].flag=false;
   nextmonster=0;
   mongaptime=45-(levof10()<<1);
   totalmonsters=levof10()+5;
@@ -54,7 +54,7 @@ void initmonsters(void)
       maxmononscr=5;
   }
   nextmontime=10;
-  unbonusflag=TRUE;
+  unbonusflag=true;
 }
 
 void erasemonsters(void)
@@ -76,7 +76,7 @@ void domonsters(void)
       createmonster();
     if (unbonusflag && nextmonster==totalmonsters && nextmontime==0)
       if (isalive()) {
-        unbonusflag=FALSE;
+        unbonusflag=false;
         createbonus();
       }
   }
@@ -84,7 +84,7 @@ void domonsters(void)
     if (mondat[i].flag) {
       if (mondat[i].hnt>10-levof10()) {
         if (mondat[i].nob) {
-          mondat[i].nob=FALSE;
+          mondat[i].nob=false;
           mondat[i].hnt=0;
         }
       }
@@ -107,10 +107,10 @@ void createmonster(void)
   Sint4 i;
   for (i=0;i<MONSTERS;i++)
     if (!mondat[i].flag) {
-      mondat[i].flag=TRUE;
-      mondat[i].alive=TRUE;
+      mondat[i].flag=true;
+      mondat[i].alive=true;
       mondat[i].t=0;
-      mondat[i].nob=TRUE;
+      mondat[i].nob=true;
       mondat[i].hnt=0;
       mondat[i].h=14;
       mondat[i].v=0;
@@ -130,11 +130,11 @@ void createmonster(void)
     }
 }
 
-bool mongotgold=FALSE;
+bool mongotgold=false;
 
 void mongold(void)
 {
-  mongotgold=TRUE;
+  mongotgold=true;
 }
 
 void monai(Sint4 mon)
@@ -153,7 +153,7 @@ void monai(Sint4 mon)
     if (mondat[mon].hnt>30+(levof10()<<1))
       if (!mondat[mon].nob) {
         mondat[mon].hnt=0;
-        mondat[mon].nob=TRUE;
+        mondat[mon].nob=true;
       }
 
     /* Set up monster direction properties to chase Digger */
@@ -312,7 +312,7 @@ void monai(Sint4 mon)
 
   /* Draw monster */
 
-  push=TRUE;
+  push=true;
   drawmon(mon,mondat[mon].nob,mondat[mon].hdir,mondat[mon].x,mondat[mon].y);
   for (i=0;i<TYPES;i++)
     clfirst[i]=first[i];
@@ -348,10 +348,10 @@ void monai(Sint4 mon)
   /* Check for collision with bag */
 
   i=clfirst[1];
-  bagf=FALSE;
+  bagf=false;
   while (i!=-1) {
     if (bagexist(i-FIRSTBAG)) {
-      bagf=TRUE;
+      bagf=true;
       break;
     }
     i=clcoll[i];
@@ -359,14 +359,14 @@ void monai(Sint4 mon)
 
   if (bagf) {
     mondat[mon].t++; /* Time penalty */
-    mongotgold=FALSE;
+    mongotgold=false;
     if (mondat[mon].dir==DIR_RIGHT || mondat[mon].dir==DIR_LEFT) {
       push=pushbags(mondat[mon].dir,clfirst,clcoll);      /* Horizontal push */
       mondat[mon].t++; /* Time penalty */
     }
     else
       if (!pushudbags(clfirst,clcoll)) /* Vertical push */
-        push=FALSE;
+        push=false;
     if (mongotgold) /* No time penalty if monster eats gold */
       mondat[mon].t=0;
     if (!mondat[mon].nob && mondat[mon].hnt>1)
@@ -456,27 +456,27 @@ bool fieldclear(Sint4 dir,Sint4 x,Sint4 y)
       if (x<14)
         if ((getfield(x+1,y)&0x2000)==0)
           if ((getfield(x+1,y)&1)==0 || (getfield(x,y)&0x10)==0)
-            return TRUE;
+            return true;
       break;
     case DIR_UP:
       if (y>0)
         if ((getfield(x,y-1)&0x2000)==0)
           if ((getfield(x,y-1)&0x800)==0 || (getfield(x,y)&0x40)==0)
-            return TRUE;
+            return true;
       break;
     case DIR_LEFT:
       if (x>0)
         if ((getfield(x-1,y)&0x2000)==0)
           if ((getfield(x-1,y)&0x10)==0 || (getfield(x,y)&1)==0)
-            return TRUE;
+            return true;
       break;
     case DIR_DOWN:
       if (y<9)
         if ((getfield(x,y+1)&0x2000)==0)
           if ((getfield(x,y+1)&0x40)==0 || (getfield(x,y)&0x800)==0)
-            return TRUE;
+            return true;
   }
-  return FALSE;
+  return false;
 }
 
 void checkmonscared(Sint4 h)
@@ -490,7 +490,7 @@ void checkmonscared(Sint4 h)
 void killmon(Sint4 mon)
 {
   if (mondat[mon].flag) {
-    mondat[mon].flag=mondat[mon].alive=FALSE;
+    mondat[mon].flag=mondat[mon].alive=false;
     erasespr(mon+FIRSTMONSTER);
     if (bonusmode)
       totalmonsters++;
@@ -522,7 +522,7 @@ Sint4 killmonsters(int *clfirst,int *clcoll)
 
 void squashmonster(Sint4 mon,Sint4 death,Sint4 bag)
 {
-  mondat[mon].alive=FALSE;
+  mondat[mon].alive=false;
   mondat[mon].death=death;
   mondat[mon].bag=bag;
 }

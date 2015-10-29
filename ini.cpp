@@ -157,7 +157,7 @@ bool GetINIBool(char *section,char *key,bool def,const char *filename)
   sprintf(buf,"%i",def);
   GetINIString(section,key,buf,buf,80,filename);
   if (buf[0]=='T' || buf[0]=='t')
-    return TRUE;
+    return true;
   else
     return atoi(buf);
 }
@@ -165,5 +165,5 @@ bool GetINIBool(char *section,char *key,bool def,const char *filename)
 void WriteINIBool(char *section,char *key,bool value,
                              const char *filename)
 {
-  WriteINIString(section,key,value ? "True" : "False", filename);
+  WriteINIString(section,key,value ? "true" : "false", filename);
 }

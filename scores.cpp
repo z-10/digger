@@ -31,7 +31,7 @@ char scorebuf[512];
 
 Uint4 bonusscore=20000;
 
-bool gotinitflag=FALSE;
+bool gotinitflag=false;
 
 void readscores(void);
 void writescores(void);
@@ -176,7 +176,7 @@ void addscore(int n,Sint4 score)
 void endofgame(void)
 {
   Sint4 i;
-  bool initflag=FALSE;
+  bool initflag=false;
   for (i=0;i<diggers;i++)
     addscore(i,0);
   if (playing || !drfvalid)
@@ -203,7 +203,7 @@ void endofgame(void)
       getinitials();
       shufflehigh();
       savescores();
-      initflag=TRUE;
+      initflag=true;
     }
   }
   if (!initflag && !gauntlet) {
@@ -212,7 +212,7 @@ void endofgame(void)
     for (i=0;i<50 && !escape;i++)
       newframe();
     outtext("         ",104,0,3);
-    setretr(TRUE);
+    setretr(true);
   }
 }
 
@@ -282,7 +282,7 @@ void getinitials(void)
   gclear();
   gpal(0);
   ginten(0);
-  setretr(TRUE);
+  setretr(true);
   recputinit(scoreinit[0]);
 }
 
@@ -290,7 +290,7 @@ void flashywait(Sint4 n)
 {
   Sint4 i,gt,cx,p=0;
   Sint3 gap=19;
-  setretr(FALSE);
+  setretr(false);
   for (i=0;i<(n<<1);i++)
     for (cx=0;cx<volume;cx++) {
       gpal(p=1-p);

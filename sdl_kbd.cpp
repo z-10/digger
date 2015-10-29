@@ -45,9 +45,9 @@ bool GetAsyncKeyState(int key)
 	SDL_PumpEvents();
 	keys = SDL_GetKeyboardState(NULL);
 	if (keys[key])
-		return(TRUE);
+		return(true);
 	else
-		return(FALSE);
+		return(false);
 }
 
 void initkeyb(void)
@@ -67,7 +67,7 @@ Sint4 getkey(void)
 {
 	Sint4 result;
 
-	while(kbhit() != TRUE)
+	while(kbhit() != true)
 		gethrt();
 	result = kbuffer[0];
 	memcpy(kbuffer, kbuffer + 1, --klen);
@@ -81,8 +81,8 @@ bool kbhit(void)
 	doscreenupdate();
 
 	if (klen > 0)
-		return(TRUE);
+		return(true);
 	else
-		return(FALSE);
+		return(false);
 
 }

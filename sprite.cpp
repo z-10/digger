@@ -3,7 +3,7 @@
 #include "sprite.h"
 #include "hardware.h"
 
-bool retrflag=TRUE;
+bool retrflag=true;
 
 bool sprrdrwf[SPRITES+1];
 bool sprrecf[SPRITES+1];
@@ -56,7 +56,7 @@ void createspr(Sint4 n,Sint4 ch,Uint3 *mov,Sint4 wid,Sint4 hei,Sint4 bwid,
   sprnhei[n]=sprhei[n]=hei;
   sprnbwid[n]=sprbwid[n]=bwid;
   sprnbhei[n]=sprbhei[n]=bhei;
-  sprenf[n]=FALSE;
+  sprenf[n]=false;
 }
 
 void movedrawspr(Sint4 n,Sint4 x,Sint4 y)
@@ -72,8 +72,8 @@ void movedrawspr(Sint4 n,Sint4 x,Sint4 y)
   setrdrwflgs(n);
   putis();
   ggeti(sprx[n],spry[n],sprmov[n],sprwid[n],sprhei[n]);
-  sprenf[n]=TRUE;
-  sprrdrwf[n]=TRUE;
+  sprenf[n]=true;
+  sprrdrwf[n]=true;
   putims();
 }
 
@@ -82,7 +82,7 @@ void erasespr(Sint4 n)
   if (!sprenf[n])
     return;
   gputi(sprx[n],spry[n],sprmov[n],sprwid[n],sprhei[n]);
-  sprenf[n]=FALSE;
+  sprenf[n]=false;
   clearrdrwf();
   setrdrwflgs(n);
   putims();
@@ -108,9 +108,9 @@ void drawspr(Sint4 n,Sint4 x,Sint4 y)
   sprwid[n]=t3;
   spry[n]=t2;
   sprx[n]=t1;
-  sprrdrwf[n]=TRUE;
+  sprrdrwf[n]=true;
   putis();
-  sprenf[n]=TRUE;
+  sprenf[n]=true;
   sprx[n]=x;
   spry[n]=y;
   sprch[n]=sprnch[n];
@@ -168,25 +168,25 @@ void clearrdrwf(void)
   Sint4 i;
   clearrecf();
   for (i=0;i<SPRITES+1;i++)
-    sprrdrwf[i]=FALSE;
+    sprrdrwf[i]=false;
 }
 
 void clearrecf(void)
 {
   Sint4 i;
   for (i=0;i<SPRITES+1;i++)
-    sprrecf[i]=FALSE;
+    sprrecf[i]=false;
 }
 
 void setrdrwflgs(Sint4 n)
 {
   Sint4 i;
   if (!sprrecf[n]) {
-    sprrecf[n]=TRUE;
+    sprrecf[n]=true;
     for (i=0;i<SPRITES;i++)
       if (sprenf[i] && i!=n) {
         if (collide(i,n)) {
-          sprrdrwf[i]=TRUE;
+          sprrdrwf[i]=true;
           setrdrwflgs(i);
         }
       }
@@ -197,38 +197,38 @@ bool collide(Sint4 bx,Sint4 si)
 {
   if (sprx[bx]>=sprx[si]) {
     if (sprx[bx]>(sprwid[si]<<2)+sprx[si]-1)
-      return FALSE;
+      return false;
   }
   else
     if (sprx[si]>(sprwid[bx]<<2)+sprx[bx]-1)
-      return FALSE;
+      return false;
   if (spry[bx]>=spry[si]) {
     if (spry[bx]<=sprhei[si]+spry[si]-1)
-      return TRUE;
-    return FALSE;
+      return true;
+    return false;
   }
   if (spry[si]<=sprhei[bx]+spry[bx]-1)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool bcollide(Sint4 bx,Sint4 si)
 {
   if (sprx[bx]>=sprx[si]) {
     if (sprx[bx]+sprbwid[bx]>(sprwid[si]<<2)+sprx[si]-sprbwid[si]-1)
-      return FALSE;
+      return false;
   }
   else
     if (sprx[si]+sprbwid[si]>(sprwid[bx]<<2)+sprx[bx]-sprbwid[bx]-1)
-      return FALSE;
+      return false;
   if (spry[bx]>=spry[si]) {
     if (spry[bx]+sprbhei[bx]<=sprhei[si]+spry[si]-sprbhei[si]-1)
-      return TRUE;
-    return FALSE;
+      return true;
+    return false;
   }
   if (spry[si]+sprbhei[si]<=sprhei[bx]+spry[bx]-sprbhei[bx]-1)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 void putims(void)

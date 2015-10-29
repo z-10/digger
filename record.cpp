@@ -13,8 +13,8 @@
 
 char *recb,*plb,*plp;
 
-bool playing=FALSE,savedrf=FALSE,gotname=FALSE,gotgame=FALSE,drfvalid=TRUE,
-     kludge=FALSE;
+bool playing=false,savedrf=false,gotname=false,gotgame=false,drfvalid=true,
+     kludge=false;
 
 char rname[128];
 
@@ -44,10 +44,10 @@ void openplay(char *name)
   info=fopen("DRFINFO.TXT","wt");
 #endif
   if (playf==NULL) {
-    escape=TRUE;
+    escape=true;
     return;
   }
-  gauntlet=FALSE;
+  gauntlet=false;
   startlev=1;
   nplayers=1;
   diggers=1;
@@ -57,12 +57,12 @@ void openplay(char *name)
   fgets(buf,80,playf); /* Get id string */
   if (buf[0]!='D' || buf[1]!='R' || buf[2]!='F') {
     fclose(playf);
-    escape=TRUE;
+    escape=true;
     return;
   }
   fgets(buf,80,playf); /* Get version for kludge switches */
   if (atol(buf+7)<=19981125l)
-    kludge=TRUE;
+    kludge=true;
   fgets(buf,80,playf); /* Get mode */
   if (*buf=='1') {
     nplayers=1;
@@ -81,7 +81,7 @@ void openplay(char *name)
       else
         x=0;
       if (buf[x]=='G') {
-        gauntlet=TRUE;
+        gauntlet=true;
         x++;
         gtime=atoi(buf+x);
         while (buf[x]>='0' && buf[x]<='9')
@@ -113,7 +113,7 @@ void openplay(char *name)
   plb=plp=(char*)malloc(l);
   if (plb==(char*)NULL) {
     fclose(playf);
-    escape=TRUE;
+    escape=true;
     return;
   }
 
@@ -125,15 +125,15 @@ void openplay(char *name)
   fclose(playf);
   plp=plb;
 
-  playing=TRUE;
+  playing=true;
   recinit();
   game();
-  gotgame=TRUE;
-  playing=FALSE;
+  gotgame=true;
+  playing=false;
   free(plb);
   gauntlet=origg;
   gtime=origgtime;
-  kludge=FALSE;
+  kludge=false;
   startlev=origstartlev;
   diggers=origdiggers;
   nplayers=orignplayers;
@@ -173,11 +173,11 @@ void mprintf(char *f,...)
 void makedir(Sint4 *dir,bool *fire,char d)
 {
   if (d>='A' && d<='Z') {
-    *fire=TRUE;
+    *fire=true;
     d-='A'-'a';
   }
   else
-    *fire=FALSE;
+    *fire=false;
   switch (d) {
     case 's': *dir=DIR_NONE; break;
     case 'r': *dir=DIR_RIGHT; break;
@@ -195,7 +195,7 @@ void playgetdir(Sint4 *dir,bool *fire)
   }
   else {
     if (*plp=='E' || *plp=='e') {
-      escape=TRUE;
+      escape=true;
       return;
     }
     rld=*(plp++);
@@ -263,7 +263,7 @@ void recinit(void)
 {
   int x,y,l;
   recp=0;
-  drfvalid=TRUE;
+  drfvalid=true;
   mprintf("DRF\n"); /* Required at start of DRF */
   if (kludge)
     mprintf("AJ DOS 19981125\n");
@@ -305,15 +305,15 @@ void recsavedrf(void)
   FILE *recf;
   Uint5 i;
   int j;
-  bool gotfile=TRUE;
+  bool gotfile=true;
   char nambuf[80],init[4];
   if (!drfvalid)
     return;
   if (gotname)
     if ((recf=fopen(rname,"wt"))==NULL)
-      gotname=FALSE;
+      gotname=false;
     else
-      gotfile=TRUE;
+      gotfile=true;
   if (!gotname) {
     if (nplayers==2)
       recf=fopen(DEFAULTSN,"wt"); /* Should get a name, really */
@@ -338,9 +338,9 @@ void recsavedrf(void)
       recf=fopen(nambuf,"wt");
     }
     if (recf==NULL)
-      gotfile=FALSE;
+      gotfile=false;
     else
-      gotfile=TRUE;
+      gotfile=true;
   }
   if (!gotfile)
     return;
@@ -394,6 +394,6 @@ void recputeog(void)
 
 void recname(char *name)
 {
-  gotname=TRUE;
+  gotname=true;
   strcpy(rname,name);
 }

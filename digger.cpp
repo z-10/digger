@@ -23,7 +23,7 @@ Sint4 emmask=0;
 
 Sint3 emfield[MSIZE];
 
-bool bonusvisible=FALSE,bonusmode=FALSE,digvisible;
+bool bonusvisible=false,bonusmode=false,digvisible;
 
 void updatedigger(int n);
 void diggerdie(int n);
@@ -46,23 +46,23 @@ void initdigger(void)
     digdat[dig].rx=0;
     digdat[dig].ry=0;
     digdat[dig].bagtime=0;
-    digdat[dig].alive=TRUE;
-    digdat[dig].dead=FALSE; /* alive !=> !dead but dead => !alive */
-    digdat[dig].invin=FALSE;
+    digdat[dig].alive=true;
+    digdat[dig].dead=false; /* alive !=> !dead but dead => !alive */
+    digdat[dig].invin=false;
     digdat[dig].ivt=0;
     digdat[dig].deathstage=1;
     digdat[dig].y=digdat[dig].v*18+18;
     movedrawspr(dig+FIRSTDIGGER-curplayer,digdat[dig].x,digdat[dig].y);
-    digdat[dig].notfiring=TRUE;
+    digdat[dig].notfiring=true;
     digdat[dig].emocttime=0;
-    digdat[dig].firepressed=FALSE;
+    digdat[dig].firepressed=false;
     digdat[dig].expsn=0;
     digdat[dig].rechargetime=0;
     digdat[dig].emn=0;
     digdat[dig].msc=1;
   }
-  digvisible=TRUE;
-  bonusvisible=bonusmode=FALSE;
+  digvisible=true;
+  bonusvisible=bonusmode=false;
 }
 
 Uint5 curtime,ftime;
@@ -105,7 +105,7 @@ void drawdig(int n,int d,int x,int y,bool f)
   if (digdat[n].invin) {
     digdat[n].ivt--;
     if (digdat[n].ivt==0)
-      digdat[n].invin=FALSE;
+      digdat[n].invin=false;
     else
       if (digdat[n].ivt%10<5)
         erasespr(FIRSTDIGGER+n-curplayer);
@@ -119,7 +119,7 @@ void dodigger(void)
   if (gauntlet) {
     drawlives();
     if (cgtime<ftime)
-      timeout=TRUE;
+      timeout=true;
     cgtime-=ftime;
   }
   for (n=curplayer;n<diggers+curplayer;n++) {
@@ -187,7 +187,7 @@ void updatefire(int n)
       if (getfirepflag(n-curplayer))
         if (digdat[n].alive) {
           digdat[n].rechargetime=levof10()*3+60;
-          digdat[n].notfiring=FALSE;
+          digdat[n].notfiring=false;
           switch (digdat[n].dir) {
             case DIR_RIGHT:
               digdat[n].fx=digdat[n].x+8;
@@ -261,9 +261,9 @@ void updatefire(int n)
     }
     if (clfirst[0]!=-1 || clfirst[1]!=-1 || clfirst[2]!=-1 || clfirst[3]!=-1 ||
         clfirst[4]!=-1)
-      clflag=TRUE;
+      clflag=true;
     else
-      clflag=FALSE;
+      clflag=false;
     if (clfirst[0]!=-1 || clfirst[1]!=-1 || clfirst[3]!=-1) {
       digdat[n].expsn=1;
       i=clfirst[3];
@@ -322,7 +322,7 @@ void erasediggers(void)
   int i;
   for (i=0;i<diggers;i++)
     erasespr(FIRSTDIGGER+i);
-  digvisible=FALSE;
+  digvisible=false;
 }
 
 void drawexplosion(int n)
@@ -345,7 +345,7 @@ void drawexplosion(int n)
 void killfire(int n)
 {
   if (!digdat[n].notfiring) {
-    digdat[n].notfiring=TRUE;
+    digdat[n].notfiring=true;
     erasespr(FIRSTFIREBALL+n-curplayer);
     soundfireoff(n);
   }
@@ -354,7 +354,7 @@ void killfire(int n)
 void updatedigger(int n)
 {
   Sint4 dir,ddir,diggerox,diggeroy,nmon;
-  bool push=TRUE,bagf;
+  bool push=true,bagf;
   int clfirst[TYPES],clcoll[SPRITES],i;
   digger_readdir(n-curplayer);
   dir=getdir(n-curplayer);
@@ -422,10 +422,10 @@ void updatedigger(int n)
   incpenalty();
 
   i=clfirst[1];
-  bagf=FALSE;
+  bagf=false;
   while (i!=-1) {
     if (bagexist(i-FIRSTBAG)) {
-      bagf=TRUE;
+      bagf=true;
       break;
     }
     i=clcoll[i];
@@ -438,7 +438,7 @@ void updatedigger(int n)
     }
     else
       if (!pushudbags(clfirst,clcoll))
-        push=FALSE;
+        push=false;
     if (!push) { /* Strange, push not completely defined */
       digdat[n].x=diggerox;
       digdat[n].y=diggeroy;
@@ -479,7 +479,7 @@ void diggerdie(int n)
     case 1:
       if (bagy(digdat[n].deathbag)+6>digdat[n].y)
         digdat[n].y=bagy(digdat[n].deathbag)+6;
-      drawdigger(n-curplayer,15,digdat[n].x,digdat[n].y,FALSE);
+      drawdigger(n-curplayer,15,digdat[n].x,digdat[n].y,false);
       incpenalty();
       if (getbagdir(digdat[n].deathbag)+1==0) {
         soundddie();
@@ -497,7 +497,7 @@ void diggerdie(int n)
       if (digdat[n].deathani==0)
         music(2);
       drawdigger(n-curplayer,14-digdat[n].deathani,digdat[n].x,digdat[n].y,
-                 FALSE);
+                 false);
       for (i=0;i<TYPES;i++)
         clfirst[i]=first[i];
       for (i=0;i<SPRITES;i++)
@@ -525,7 +525,7 @@ void diggerdie(int n)
     case 5:
       if (digdat[n].deathani>=0 && digdat[n].deathani<=6) {
         drawdigger(n-curplayer,15,digdat[n].x,
-                   digdat[n].y-deatharc[digdat[n].deathani],FALSE);
+                   digdat[n].y-deatharc[digdat[n].deathani],false);
         if (digdat[n].deathani==6 && !isalive())
           musicoff();
         incpenalty();
@@ -543,15 +543,15 @@ void diggerdie(int n)
       if (digdat[n].deathtime!=0)
         digdat[n].deathtime--;
       else {
-        digdat[n].dead=TRUE;
-        alldead=TRUE;
+        digdat[n].dead=true;
+        alldead=true;
         for (i=0;i<diggers;i++)
           if (!digdat[i].dead) {
-            alldead=FALSE;
+            alldead=false;
             break;
           }
         if (alldead)
-          setdead(TRUE);
+          setdead(true);
         else
           if (isalive() && digdat[n].lives>0) {
             if (!gauntlet)
@@ -566,17 +566,17 @@ void diggerdie(int n)
               digdat[n].rx=0;
               digdat[n].ry=0;
               digdat[n].bagtime=0;
-              digdat[n].alive=TRUE;
-              digdat[n].dead=FALSE;
-              digdat[n].invin=TRUE;
+              digdat[n].alive=true;
+              digdat[n].dead=false;
+              digdat[n].invin=true;
               digdat[n].ivt=50;
               digdat[n].deathstage=1;
               digdat[n].y=digdat[n].v*18+18;
               erasespr(n+FIRSTDIGGER-curplayer);
               movedrawspr(n+FIRSTDIGGER-curplayer,digdat[n].x,digdat[n].y);
-              digdat[n].notfiring=TRUE;
+              digdat[n].notfiring=true;
               digdat[n].emocttime=0;
-              digdat[n].firepressed=FALSE;
+              digdat[n].firepressed=false;
               digdat[n].expsn=0;
               digdat[n].rechargetime=0;
               digdat[n].emn=0;
@@ -594,14 +594,14 @@ void diggerdie(int n)
 
 void createbonus(void)
 {
-  bonusvisible=TRUE;
+  bonusvisible=true;
   drawbonus(292,18);
 }
 
 void initbonusmode(void)
 {
   int i;
-  bonusmode=TRUE;
+  bonusmode=true;
   erasebonus();
   ginten(1);
   bonustimeleft=250-levof10()*20;
@@ -612,14 +612,14 @@ void initbonusmode(void)
 
 void endbonusmode(void)
 {
-  bonusmode=FALSE;
+  bonusmode=false;
   ginten(0);
 }
 
 void erasebonus(void)
 {
   if (bonusvisible) {
-    bonusvisible=FALSE;
+    bonusvisible=false;
     erasespr(FIRSTBONUS);
   }
   ginten(0);
@@ -644,8 +644,8 @@ bool checkdiggerunderbag(Sint4 h,Sint4 v)
       if (digdat[n].mdir==DIR_UP || digdat[n].mdir==DIR_DOWN)
         if ((digdat[n].x-12)/20==h)
           if ((digdat[n].y-18)/18==v || (digdat[n].y-18)/18+1==v)
-            return TRUE;
-  return FALSE;
+            return true;
+  return false;
 }
 
 void killdigger(int n,Sint4 stage,Sint4 bag)
@@ -653,7 +653,7 @@ void killdigger(int n,Sint4 stage,Sint4 bag)
   if (digdat[n].invin)
     return;
   if (digdat[n].deathstage<2 || digdat[n].deathstage>4) {
-    digdat[n].alive=FALSE;
+    digdat[n].alive=false;
     digdat[n].deathstage=stage;
     digdat[n].deathbag=bag;
   }
@@ -685,7 +685,7 @@ Sint4 embox[8]={8,12,12,9,16,12,6,9};
 
 bool hitemerald(Sint4 x,Sint4 y,Sint4 rx,Sint4 ry,Sint4 dir)
 {
-  bool hit=FALSE;
+  bool hit=false;
   Sint4 r;
   if (dir!=DIR_RIGHT && dir!=DIR_UP && dir!=DIR_LEFT && dir!=DIR_DOWN)
     return hit;
@@ -705,7 +705,7 @@ bool hitemerald(Sint4 x,Sint4 y,Sint4 rx,Sint4 ry,Sint4 dir)
     if (r==embox[dir+1]) {
       eraseemerald(x*20+12,y*18+21);
       incpenalty();
-      hit=TRUE;
+      hit=true;
       emfield[y*MWIDTH+x]&=~emmask;
     }
   }
@@ -760,8 +760,8 @@ bool isalive(void)
   int i;
   for (i=curplayer;i<diggers+curplayer;i++)
     if (digdat[i].alive)
-      return TRUE;
-  return FALSE;
+      return true;
+  return false;
 }
 
 int getlives(int pl)

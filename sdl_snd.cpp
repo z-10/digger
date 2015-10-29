@@ -11,17 +11,17 @@ samp getsample(void);
 samp *buf;
 Uint4 bsize;
 
-bool wave_device_available = FALSE;
+bool wave_device_available = false;
 
 bool initsounddevice(void)
 {
-	return(TRUE);
+	return(true);
 }
 
 bool setsounddevice(int base, int irq, int dma, Uint4 samprate, Uint4 bufsize)
 {
 	SDL_AudioSpec wanted;
-	bool result = FALSE;
+	bool result = false;
 
 	wanted.freq = samprate;
 	wanted.samples = bufsize;
@@ -32,13 +32,13 @@ bool setsounddevice(int base, int irq, int dma, Uint4 samprate, Uint4 bufsize)
 
 	if ((SDL_Init(SDL_INIT_AUDIO)) >= 0)
 		if ((SDL_OpenAudio(&wanted, NULL)) >= 0)
-			result = TRUE;
-	if (result == FALSE)
+			result = true;
+	if (result == false)
 		fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
 	else {
 		buf = new samp[bufsize];
 		bsize = bufsize;
-		wave_device_available = TRUE;
+		wave_device_available = true;
 	}
 
 	return(result);

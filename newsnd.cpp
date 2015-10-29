@@ -21,7 +21,7 @@ Uint4 firsts,last,size;           /* data available to output device */
 int rate;
 Uint4 t0rate,t2rate,t2new,t0v,t2v;
 Sint4 i8pulse=0;
-bool t2f=FALSE,t2sw,i8flag=FALSE;
+bool t2f=false,t2sw,i8flag=false;
 samp lut[257];
 Uint4 pwlut[51];
 
@@ -56,7 +56,7 @@ void soundinitglob(int port,int irq,int dma,Uint4 bufsize,Uint4 samprate)
   firsts=0;
   last=1;
   size=bufsize<<1;
-  t2sw=FALSE;     /* As it should be left */
+  t2sw=false;     /* As it should be left */
   for (i=0;i<=rate;i++)
     lut[i]=(samp)(MIN_SAMP+(i*(MAX_SAMP-MIN_SAMP))/rate);
   for (i=1;i<=50;i++)
@@ -107,12 +107,12 @@ void s1settimer2(Uint4 t2)
 
 void s1soundoff(void)
 {
-  t2sw=FALSE;
+  t2sw=false;
 }
 
 void s1setspkrt2(void)
 {
-  t2sw=TRUE;
+  t2sw=true;
 }
 
 void s1settimer0(Uint4 t0)
@@ -138,16 +138,16 @@ bool addcarry(Uint4 *dest,Uint4 add)
 {
   *dest+=add;
   if (*dest<add)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool subcarry(Uint4 *dest,Uint4 sub)
 {
   *dest-=sub;
   if (*dest>=(Uint4)(-sub))
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 /* This function is the workhorse.
@@ -169,7 +169,7 @@ bool subcarry(Uint4 *dest,Uint4 sub)
 
 samp getsample(void)
 {
-  bool f=FALSE,t2sw0;
+  bool f=false,t2sw0;
   Uint4 spkrt2,noi8,complicate=0,not2;
 
   if (subcarry(&t2v,rate)) {
@@ -191,7 +191,7 @@ samp getsample(void)
   }
 
   if (subcarry(&t0v,rate)) { /* Effectively using mode 2 here */
-    i8flag=TRUE;
+    i8flag=true;
     noi8=t0v+rate; /* Amount of time that went by before interrupt */
     t0v+=t0rate;
     complicate|=2;
@@ -200,14 +200,14 @@ samp getsample(void)
   t2sw0=t2sw;
 
   if (i8flag && i8pulse<=0) {
-    f=TRUE;
+    f=true;
     if (spkrmode!=0)
       if (spkrmode!=1)
         t2sw=!t2sw;
       else {
         i8pulse=pwlut[pulsewidth];
-        t2sw=TRUE;
-        f=FALSE;
+        t2sw=true;
+        f=false;
       }
   }
 
@@ -216,9 +216,9 @@ samp getsample(void)
     i8pulse-=rate;
     if (i8pulse<=0) {
       complicate|=8;
-      t2sw=FALSE;
-      i8flag=TRUE;
-      f=TRUE;
+      t2sw=false;
+      i8flag=true;
+      f=true;
     }
   }
 
@@ -227,7 +227,7 @@ samp getsample(void)
       soundint(); /* Update music and sound effects 72.8 Hz */
       timercount-=0x4000;
     }
-    i8flag=FALSE;
+    i8flag=false;
   }
 
   if (!(complicate&1) && t2f)

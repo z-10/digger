@@ -726,7 +726,7 @@ precious gems. Count on your wits - you'll need them!
 
 Digger is written entirely in machine language to take maxi-
 mum advantage of your PC's superior graphics and sound
-capabilities. True cartoon animation with simultaneous music
+capabilities. true cartoon animation with simultaneous music
 and sound effects make Digger come alive. Created originally
 for the IBM PC, we naturally include the features you're
 looking for:

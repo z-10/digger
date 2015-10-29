@@ -1,18 +1,6 @@
 #ifndef DEF_H
 #define DEF_H
 
-#ifdef TRUE
-#undef TRUE
-#endif
-
-#ifdef FALSE
-#undef FALSE
-#endif
-
-#define TRUE true
-#define FALSE false
-
-
 typedef signed char Sint3;
 typedef unsigned char Uint3;
 typedef signed short int Sint4;

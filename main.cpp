@@ -27,14 +27,14 @@ char pldispbuf[14];
 
 Sint4 curplayer=0,nplayers=1,penalty=0,diggers=1,startlev=1;
 
-bool levnotdrawn=FALSE,alldead=FALSE,unlimlives=FALSE,started;
+bool levnotdrawn=false,alldead=false,unlimlives=false,started;
 
 char levfname[132];
-bool levfflag=FALSE;
-bool biosflag=FALSE;
+bool levfflag=false;
+bool biosflag=false;
 Sint5 delaytime=0;
 int gtime=0;
-bool gauntlet=FALSE,timeout=FALSE,synchvid=FALSE;
+bool gauntlet=false,timeout=false,synchvid=false;
 
 void shownplayers(void);
 void switchnplayers(void);
@@ -166,25 +166,25 @@ extern FILE *info;
 void game(void)
 {
   Sint4 t,c,i;
-  bool flashplayer=FALSE;
+  bool flashplayer=false;
   if (gauntlet) {
     cgtime=gtime*1193181l;
-    timeout=FALSE;
+    timeout=false;
   }
   initlives();
   gamedat[0].level=startlev;
   if (nplayers==2)
     gamedat[1].level=startlev;
-  alldead=FALSE;
+  alldead=false;
   gclear();
   curplayer=0;
   initlevel();
   curplayer=1;
   initlevel();
   zeroscores();
-  bonusvisible=TRUE;
+  bonusvisible=true;
   if (nplayers==2)
-    flashplayer=TRUE;
+    flashplayer=true;
   curplayer=0;
   while (getalllives()!=0 && !escape && !timeout) {
     while (!alldead && !escape && !timeout) {
@@ -200,10 +200,10 @@ void game(void)
 #endif
       recputrand(randv);
       if (levnotdrawn) {
-        levnotdrawn=FALSE;
+        levnotdrawn=false;
         drawscreen();
         if (flashplayer) {
-          flashplayer=FALSE;
+          flashplayer=false;
           strcpy(pldispbuf,"PLAYER ");
           if (curplayer==0)
             strcat(pldispbuf,"1");
@@ -296,10 +296,10 @@ void game(void)
       if ((alldead && getalllives()==0 && !gauntlet && !escape) || timeout)
         endofgame();
     }
-    alldead=FALSE;
+    alldead=false;
     if (nplayers==2 && getlives(1-curplayer)!=0) {
       curplayer=1-curplayer;
-      flashplayer=levnotdrawn=TRUE;
+      flashplayer=levnotdrawn=true;
     }
   }
 #ifdef INTDRF
@@ -312,7 +312,7 @@ void maininit(void)
   calibrate();
   ginit();
   gpal(0);
-  setretr(TRUE);
+  setretr(true);
   initkeyb();
   detectjoy();
   inir();
@@ -331,7 +331,7 @@ int mainprog(void)
 {
   Sint4 frame,t,x;
   loadscores();
-  escape=FALSE;
+  escape=false;
   do {
     soundstop();
     creatembspr();
@@ -341,7 +341,7 @@ int mainprog(void)
     outtext("D I G G E R",100,0,3);
     shownplayers();
     showtable();
-    started=FALSE;
+    started=false;
     frame=0;
     newframe();
     teststart();
@@ -416,22 +416,22 @@ int mainprog(void)
     if (savedrf) {
       if (gotgame) {
         recsavedrf();
-        gotgame=FALSE;
+        gotgame=false;
       }
-      savedrf=FALSE;
+      savedrf=false;
       continue;
     }
     if (escape)
       break;
     recinit();
     game();
-    gotgame=TRUE;
+    gotgame=true;
     if (gotname) {
       recsavedrf();
-      gotgame=FALSE;
+      gotgame=false;
     }
-    savedrf=FALSE;
-    escape=FALSE;
+    savedrf=false;
+    escape=false;
   } while (!escape);
   finish();
   return 0;
@@ -488,11 +488,11 @@ void switchnplayers(void)
 
 void initlevel(void)
 {
-  gamedat[curplayer].levdone=FALSE;
+  gamedat[curplayer].levdone=false;
   makefield();
   makeemfield();
   initbags();
-  levnotdrawn=TRUE;
+  levnotdrawn=true;
 }
 
 void drawscreen(void)
@@ -515,9 +515,9 @@ void initchars(void)
 void checklevdone(void)
 {
   if ((countem()==0 || monleft()==0) && isalive())
-    gamedat[curplayer].levdone=TRUE;
+    gamedat[curplayer].levdone=true;
   else
-    gamedat[curplayer].levdone=FALSE;
+    gamedat[curplayer].levdone=false;
 }
 
 void incpenalty(void)
@@ -560,7 +560,7 @@ void testpause(void)
 {
   int i;
   if (pausef) {
-    pausef=FALSE;
+    pausef=false;
     soundpause();
     sett2val(40);
     setsoundt2();
@@ -592,7 +592,7 @@ void parsecmd(int argc,char *argv[])
 {
   char *word;
   Sint4 arg,i,j,speedmul;
-  bool sf,gs=FALSE,norepf=FALSE;
+  bool sf,gs=false,norepf=false;
   FILE *levf;
 
   for (arg=1;arg<argc;arg++) {
@@ -611,14 +611,14 @@ void parsecmd(int argc,char *argv[])
         while (word[i]!=0)
           levfname[j++]=word[i++];
         levfname[j]=word[i];
-        levfflag=TRUE;
+        levfflag=true;
       }
       if (word[1]=='R' || word[1]=='r')
         recname(word+i);
       if (word[1]=='P' || word[1]=='p' || word[1]=='E' || word[1]=='e') {
         openplay(word+i);
         if (escape)
-          norepf=TRUE;
+          norepf=true;
       }
       if (word[1]=='E' || word[1]=='e') {
         finish();
@@ -635,12 +635,12 @@ void parsecmd(int argc,char *argv[])
         while (word[i]!=0)
           speedmul=10*speedmul+word[i++]-'0';
         ftime=speedmul*2000l;
-        gs=TRUE;
+        gs=true;
       }
       if (word[1]=='I' || word[1]=='i')
         sscanf(word+i,"%u",&startlev);
       if (word[1]=='U' || word[1]=='u')
-        unlimlives=TRUE;
+        unlimlives=true;
       if (word[1]=='?' || word[1]=='h' || word[1]=='H') {
         finish();
 
@@ -671,16 +671,16 @@ void parsecmd(int argc,char *argv[])
         exit(1);
       }
       if (word[1]=='Q' || word[1]=='q')
-        soundflag=FALSE;
+        soundflag=false;
       if (word[1]=='M' || word[1]=='m')
-        musicflag=FALSE;
+        musicflag=false;
       if (word[1]=='2')
         diggers=2;
       if (word[1]=='K' || word[1]=='k')
         if (word[2]=='A' || word[2]=='a')
-          redefkeyb(TRUE);
+          redefkeyb(true);
         else
-          redefkeyb(FALSE);
+          redefkeyb(false);
       if (word[1]=='A' || word[1]=='a') {
         sscanf(word+i,"%u,%x,%u,%u,%u,%u",&sound_device,&sound_port,&sound_irq,
                &sound_dma,&sound_rate,&sound_length);
@@ -701,7 +701,7 @@ void parsecmd(int argc,char *argv[])
         initsound();
       }
       if (word[1]=='V' || word[1]=='v')
-        synchvid=TRUE;
+        synchvid=true;
       if (word[1]=='G' || word[1]=='g') {
         gtime=0;
         while (word[i]!=0)
@@ -710,18 +710,18 @@ void parsecmd(int argc,char *argv[])
           gtime=3599;
         if (gtime==0)
           gtime=120;
-        gauntlet=TRUE;
+        gauntlet=true;
       }
     }
     else {
       i=strlen(word);
       if (i<1)
         continue;
-      sf=TRUE;
+      sf=true;
       if (!gs)
         for (j=0;j<i;j++)
           if (word[j]<'0' || word[j]>'9') {
-            sf=FALSE;
+            sf=false;
             break;
           }
       if (sf) {
@@ -729,7 +729,7 @@ void parsecmd(int argc,char *argv[])
         j=0;
         while (word[j]!=0)
           speedmul=10*speedmul+word[j++]-'0';
-        gs=TRUE;
+        gs=true;
         ftime=speedmul*2000l;
       }
       else {
@@ -739,7 +739,7 @@ void parsecmd(int argc,char *argv[])
           j++;
         }
         levfname[j]=word[j];
-        levfflag=TRUE;
+        levfflag=true;
       }
     }
   }
@@ -751,7 +751,7 @@ void parsecmd(int argc,char *argv[])
       levf=fopen(levfname,"rb");
     }
     if (levf==NULL)
-      levfflag=FALSE;
+      levfflag=false;
     else {
       fread(&bonusscore,2,1,levf);
       fread(leveldat,1200,1,levf);
@@ -786,7 +786,7 @@ void inir(void)
     sprintf(vbuf,"%i/%i/%i/%i/%i",keycodes[i][0],keycodes[i][1],
             keycodes[i][2],keycodes[i][3],keycodes[i][4]);
     GetINIString(INI_KEY_SETTINGS,kbuf,vbuf,vbuf,80,ININAME);
-    krdf[i]=TRUE;
+    krdf[i]=true;
     p=0;
     for (j=0;j<5;j++) {
       keycodes[i][j]=atoi(vbuf+p);
@@ -799,7 +799,7 @@ void inir(void)
   }
   gtime=(int)GetINIInt(INI_GAME_SETTINGS,"GauntletTime",120,ININAME);
   ftime=GetINIInt(INI_GAME_SETTINGS,"Speed",80000l,ININAME);
-  gauntlet=GetINIBool(INI_GAME_SETTINGS,"GauntletMode",FALSE,ININAME);
+  gauntlet=GetINIBool(INI_GAME_SETTINGS,"GauntletMode",false,ININAME);
   GetINIString(INI_GAME_SETTINGS,"Players","1",vbuf,80,ININAME);
   if (vbuf[0]=='2' && toupper(vbuf[1])=='S') {
     diggers=2;
@@ -811,8 +811,8 @@ void inir(void)
     if (nplayers<1 || nplayers>2)
       nplayers=1;
   }
-  soundflag=GetINIBool(INI_SOUND_SETTINGS,"SoundOn",TRUE,ININAME);
-  musicflag=GetINIBool(INI_SOUND_SETTINGS,"MusicOn",TRUE,ININAME);
+  soundflag=GetINIBool(INI_SOUND_SETTINGS,"SoundOn",true,ININAME);
+  musicflag=GetINIBool(INI_SOUND_SETTINGS,"MusicOn",true,ININAME);
   sound_device=(int)GetINIInt(INI_SOUND_SETTINGS,"Device",DEF_SND_DEV,ININAME);
   sound_port=(int)GetINIInt(INI_SOUND_SETTINGS,"Port",544,ININAME);
   sound_irq=(int)GetINIInt(INI_SOUND_SETTINGS,"Irq",5,ININAME);
@@ -836,15 +836,15 @@ void inir(void)
     soundinitglob(sound_port,sound_irq,sound_dma,sound_length,sound_rate);
   }
   dx_sound_volume=(int)GetINIInt(INI_SOUND_SETTINGS,"SoundVolume",0,ININAME);
-  g_bWindowed=TRUE;
-  use_640x480_fullscreen=GetINIBool(INI_GRAPHICS_SETTINGS,"640x480",FALSE,
+  g_bWindowed=true;
+  use_640x480_fullscreen=GetINIBool(INI_GRAPHICS_SETTINGS,"640x480",false,
                                     ININAME);
-  use_async_screen_updates=GetINIBool(INI_GRAPHICS_SETTINGS,"Async",TRUE,
+  use_async_screen_updates=GetINIBool(INI_GRAPHICS_SETTINGS,"Async",true,
                                       ININAME);
-  synchvid=GetINIBool(INI_GRAPHICS_SETTINGS,"Synch",FALSE,ININAME);
-  cgaflag=GetINIBool(INI_GRAPHICS_SETTINGS,"CGA",FALSE,ININAME);
-  biosflag=GetINIBool(INI_GRAPHICS_SETTINGS,"BIOSPalette",FALSE,ININAME);
-  unlimlives=GetINIBool(INI_GAME_SETTINGS,"UnlimitedLives",FALSE,ININAME);
+  synchvid=GetINIBool(INI_GRAPHICS_SETTINGS,"Synch",false,ININAME);
+  cgaflag=GetINIBool(INI_GRAPHICS_SETTINGS,"CGA",false,ININAME);
+  biosflag=GetINIBool(INI_GRAPHICS_SETTINGS,"BIOSPalette",false,ININAME);
+  unlimlives=GetINIBool(INI_GAME_SETTINGS,"UnlimitedLives",false,ININAME);
   startlev=(int)GetINIInt(INI_GAME_SETTINGS,"StartLevel",1,ININAME);
 }
 
@@ -920,17 +920,17 @@ void redefkeyb(bool allf)
   z=0;
   y-=12;
   for (i=10;i<17;i++) {
-    f=FALSE;
+    f=false;
     for (j=0;j<10;j++)
       for (k=0;k<5;k++)
         for (l=2;l<5;l++)
           if (keycodes[i][k]==keycodes[j][l] && keycodes[i][k]!=-2)
-            f=TRUE;
+            f=true;
     for (j=10;j<i;j++)
       for (k=0;k<5;k++)
         for (l=0;l<5;l++)
           if (keycodes[i][k]==keycodes[j][l] && keycodes[i][k]!=-2)
-            f=TRUE;
+            f=true;
     if (f || (allf && i!=z)) {
       if (i!=z)
         y+=12;

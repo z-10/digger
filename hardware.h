@@ -25,17 +25,6 @@ bool kbhit(void);
 void graphicsoff(void);
 void gretrace(void);
 
-void cgainit(void);
-void cgaclear(void);
-void cgapal(Sint4 pal);
-void cgainten(Sint4 inten);
-void cgaputi(Sint4 x,Sint4 y,Uint3 *p,Sint4 w,Sint4 h);
-void cgageti(Sint4 x,Sint4 y,Uint3 *p,Sint4 w,Sint4 h);
-void cgaputim(Sint4 x,Sint4 y,Sint4 ch,Sint4 w,Sint4 h);
-Sint4 cgagetpix(Sint4 x,Sint4 y);
-void cgawrite(Sint4 x,Sint4 y,Sint4 ch,Sint4 c);
-void cgatitle(void);
-
 void vgainit(void);
 void vgaclear(void);
 void vgapal(Sint4 pal);

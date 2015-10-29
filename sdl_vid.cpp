@@ -97,14 +97,14 @@ void graphicsoff(void)
 bool setmode(void)
 {
 	if (SDL_SetWindowFullscreen(sdlWindow, addflag) < 0)
-		return(FALSE);
+		return(false);
 	else
 	{
 		if(addflag == 0)
 		{
 			SDL_SetWindowSize(sdlWindow, 640, 480);
 		}
-		return(TRUE);
+		return(true);
 	}
 }
 
@@ -122,9 +122,9 @@ void switchmode(void)
 		addflag = SDL_WINDOW_FULLSCREEN_DESKTOP;
 	else
 		addflag = 0;
-	if(setmode() == FALSE) {
+	if(setmode() == false) {
 		addflag = saved;
-		if(setmode() == FALSE) {
+		if(setmode() == false) {
 			fprintf(stderr, "Fatal: failed to change videomode and"\
 				"fallback mode failed as well. Exitting.\n");
 			exit(1);
@@ -193,7 +193,7 @@ void vgainit(void)
 		exit(1);
 	}
 
-	if(setmode() == FALSE) {
+	if(setmode() == false) {
 		fprintf(stderr, "Couldn't set 640x480x8 video mode: %s\n", SDL_GetError());
 		exit(1);
   }
