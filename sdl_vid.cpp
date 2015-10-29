@@ -12,6 +12,8 @@
 
 /* malloc() and friends */
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 /* Lovely SDL */
 #include <SDL.h>
 
