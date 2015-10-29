@@ -440,19 +440,3 @@ void savescreen(void)
 		fputc(VGLDisplay->Bitmap[i], f);
 	fclose(f);*/
 }
-
-/*
- * Depreciated functions, necessary only to avoid "Undefined symbol:..." compiler
- * errors.
- */
-
-void cgainit(void) {}
-void cgaclear(void) {}
-void cgatitle(void) {}
-void cgawrite(Sint4 x, Sint4 y, Sint4 ch, Sint4 c) {}
-void cgaputim(Sint4 x, Sint4 y, Sint4 ch, Sint4 w, Sint4 h) {}
-void cgageti(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h) {}
-void cgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h) {}
-void cgapal(Sint4 pal) {}
-void cgainten(Sint4 inten) {}
-Sint4 cgagetpix(Sint4 x, Sint4 y) {return(0);}

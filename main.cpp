@@ -676,22 +676,6 @@ void parsecmd(int argc,char *argv[])
         musicflag=FALSE;
       if (word[1]=='2')
         diggers=2;
-      if (word[1]=='B' || word[1]=='b' || word[1]=='C' || word[1]=='c') {
-        ginit=cgainit;
-        gpal=cgapal;
-        ginten=cgainten;
-        gclear=cgaclear;
-        ggetpix=cgagetpix;
-        gputi=cgaputi;
-        ggeti=cgageti;
-        gputim=cgaputim;
-        gwrite=cgawrite;
-        gtitle=cgatitle;
-        if (word[1]=='B' || word[1]=='b')
-          biosflag=TRUE;
-        ginit();
-        gpal(0);
-      }
       if (word[1]=='K' || word[1]=='k')
         if (word[2]=='A' || word[2]=='a')
           redefkeyb(TRUE);
