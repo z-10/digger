@@ -35,7 +35,6 @@ find_package(SDL2_image REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
 link_libraries(${LIBS} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} z objc)
-set(SOURCE_FILES ${SOURCE_FILES} fbsd_sup.cpp)
 
 #todo : add windows
 

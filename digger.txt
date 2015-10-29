@@ -550,10 +550,6 @@ it.
 *   If your system has a flat memory model (most modern protected-mode system)
     then add its name to the list of OSes for which FLATFILE should be defined.
 
-*   If your system doesn't have strup() function then add its name to the
-    section where "fbsd_sup.h" being included and make sure that you have added
-    fbsd_sup.c to the list of object files for your system in the Makefile.sdl.
-
 *   If your system doesn't have stricmp() and strnicmp() string-comparing
     functions, but instead has strcasecmp() and strncasecmp() then add the name
     of your OS to the appropriate section of Makefile.sdl.

@@ -68,6 +68,4 @@ typedef unsigned long int Uint5;
 
 #define DIGGER_VERSION "SDL2 0.0.1 RS"
 
-#include "fbsd_sup.h"
-
 #endif /* DEF_H */
