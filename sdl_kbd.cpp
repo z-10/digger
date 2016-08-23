@@ -28,14 +28,11 @@ int Handler(void* userdata, SDL_Event *event)
 		if(klen == KBLEN) /* Buffer is full, drop some pieces */
 			memcpy(kbuffer, kbuffer + 1, --klen);
 		kbuffer[klen++] = event->key.keysym.sym;
-
-		/* ALT + Enter handling (fullscreen/windowed operation) */
-		if((event->key.keysym.sym == SDLK_RETURN || event->key.keysym.sym == SDLK_KP_ENTER) &&
-		    ((event->key.keysym.mod & KMOD_ALT) != 0))
-			switchmode();
-	}
-	if(event->type == SDL_QUIT)
-		exit(0);
+}
+if(event->type == SDL_QUIT)
+{
+	exit(0);
+}
 
 	return(1);
 }

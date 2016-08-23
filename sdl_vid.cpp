@@ -112,13 +112,7 @@ bool setmode(void)
 
 void switchmode(void)
 {
-	Uint32 saved;
-	SDL_Surface *tmp = NULL;
-	SDL_Surface *oldscreen;
-
-	vgageti(0, 0, (Uint3 *)&tmp, 80, 200);
-	oldscreen = screen;
-	saved = addflag;
+	Uint32 saved = addflag;
 
 	if(addflag == 0)
 		addflag = SDL_WINDOW_FULLSCREEN_DESKTOP;
@@ -133,11 +127,6 @@ void switchmode(void)
 		}
 	}
 
-	SDL_SetPaletteColors(screen->format->palette, tmp->format->palette->colors, 0, \
-		tmp->format->palette->ncolors);
-	vgaputi(0, 0, (Uint3 *)&tmp, 80, 200);
-	SDL_FreeSurface(tmp);
-	SDL_FreeSurface(oldscreen);
 }
 
 

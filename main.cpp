@@ -17,6 +17,7 @@
 #include "main.h"
 #include "newsnd.h"
 #include "ini.h"
+#include "sdl_vid.h"
 
 struct game
 {
@@ -668,11 +669,15 @@ void parsecmd(int argc,char *argv[])
                "/2 = Two player simultaneous mode\n"
                "/A = Use alternate sound device\n"
                "/U = Allow unlimited lives\n"
-               "/I = Start on a level other than 1\n");
+               "/I = Start on a level other than 1\n"
+               "/F = Fullscreen mode\n");
         exit(1);
       }
       if (word[1]=='Q' || word[1]=='q')
         soundflag=false;
+        if (word[1]=='F' || word[1]=='f')
+          switchmode();
+
       if (word[1]=='M' || word[1]=='m')
         musicflag=false;
       if (word[1]=='2')
