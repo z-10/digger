@@ -32,10 +32,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
-find_package(zlib REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
-link_libraries(${LIBS} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${ZLIB_LIBRARY})
+include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
+link_libraries(${LIBS} ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
 
 if(APPLE)
 link_libraries(objc)

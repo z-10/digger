@@ -1,4 +1,4 @@
-#include <zlib.h>
+#include "miniz.c"
 
 #include "def.h"
 #define CTITLELEN 2772
@@ -155,6 +155,6 @@ void gettitle(unsigned char *buf)
 {
 	uLongf uncomplen=UTITLELEN;
 
-	uncompress(buf, &uncomplen, title_gz, CTITLELEN);
+	mz_uncompress(buf, &uncomplen, title_gz, CTITLELEN);
 }
 
