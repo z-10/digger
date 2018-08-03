@@ -194,12 +194,7 @@ void vgainit(void)
 
 void vgaclear(void)
 {
-	SDL_Surface *tmp = NULL;
-
-	vgageti(0, 0, (Uint3 *)&tmp, 80, 200);
-	memset(tmp->pixels, 0x00, tmp->w*tmp->h);
-	vgaputi(0, 0, (Uint3 *)&tmp, 80, 200);
-	SDL_FreeSurface(tmp);
+	SDL_FillRect(screen, NULL, 0);
 }
 void setpal(SDL_Color *pal)
 {

@@ -179,7 +179,6 @@
     <ClCompile Include="..\sprite.cpp" />
     <ClCompile Include="..\title_gz.cpp" />
     <ClCompile Include="..\vgagrafx.cpp" />
-    <ClCompile Include="..\windows.cpp" />
     <ClCompile Include="windows.cpp" />
   </ItemGroup>
   <ItemGroup>
