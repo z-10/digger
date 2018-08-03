@@ -145,9 +145,9 @@ void vgainit(void)
 	SDL_SetPaletteColors(tmp->format->palette, IconPalette, 0, 256);
 
 	sdlWindow = SDL_CreateWindow("D I G G E R",
-                             SDL_WINDOWPOS_UNDEFINED,
-                             SDL_WINDOWPOS_UNDEFINED,
-                             0, 0,
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+                             800, 600,
                              SDL_WINDOW_OPENGL);
   if(sdlWindow == NULL)
 	{
@@ -175,7 +175,9 @@ void vgainit(void)
 		exit(1);
 	}
 	screen = SDL_CreateRGBSurface(0, 640, 480, 8, 0, 0, 0, 0);
-	helper = SDL_CreateRGBSurface(0, 640, 480, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+
+    helper = SDL_CreateRGBSurface(0, 640, 480, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+
 
 	if(screen == NULL || helper == NULL)
 	{
@@ -220,15 +222,6 @@ void vgapal(Sint4 pal)
 
 void doscreenupdate(void)
 {
-	struct PendNode *p;
-
-	for(p=First;p!=NULL;)
-	{
-		First = p->nextnode;
-		free(p);
-		p = First;
-	}
-	pendnum = 0;
 	SDL_BlitSurface(screen, NULL, helper, NULL);
 	SDL_UpdateTexture(sdlTexture, NULL, helper->pixels, helper->pitch);
 	SDL_RenderClear(sdlRenderer);
@@ -240,54 +233,13 @@ void vgaputi(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
 {
 	SDL_Surface *tmp;
 	SDL_Palette *reserv;
-	struct PendNode *newPtr, *ptr;
 
-	newPtr = new PendNode();
-	memset(newPtr, 0x00, (sizeof (struct PendNode)));
-	newPtr->rect.x = virt2scrx(x);
-	newPtr->rect.y = virt2scry(y);
-	newPtr->rect.w = virt2scrw(w*4);
-	newPtr->rect.h = virt2scrh(h);
-
+	SDL_Rect rect{ virt2scrx(x), virt2scry(y), virt2scrw(w * 4), virt2scrh(h) };
 	memcpy(&tmp, p, (sizeof (SDL_Surface *)));
 	reserv = tmp->format->palette;
 	tmp->format->palette = screen->format->palette;
-	SDL_BlitSurface(tmp, NULL, screen, &newPtr->rect);
+	SDL_BlitSurface(tmp, NULL, screen, &rect);
 	tmp->format->palette = reserv;
-/*
- * Following piece of code comparing already pending updates with current with
- * main goal to prevent redrawing overlapping rectangles several times.
- */
-
-	for(ptr=First;ptr!=NULL;ptr=ptr->nextnode) {
-		if((newPtr->rect.x >= ptr->rect.x) &&
-		   (newPtr->rect.y >= ptr->rect.y) &&
-		   ((newPtr->rect.x+newPtr->rect.w) <= (ptr->rect.x+ptr->rect.w)) &&
-		   ((newPtr->rect.y+newPtr->rect.h) <= (ptr->rect.y+ptr->rect.h))) {
-			delete newPtr;
-			return;
-		} else if((newPtr->rect.x <= ptr->rect.x) &&
-		   (newPtr->rect.y <= ptr->rect.y) &&
-		   ((newPtr->rect.x+newPtr->rect.w) >= (ptr->rect.x+ptr->rect.w)) &&
-		   ((newPtr->rect.y+newPtr->rect.h) >= (ptr->rect.y+ptr->rect.h))) {
-			ptr->rect.x = newPtr->rect.x;
-			ptr->rect.y = newPtr->rect.y;
-			ptr->rect.w = newPtr->rect.w;
-			ptr->rect.h = newPtr->rect.h;
-			free(newPtr);
-			return;
-		}
-	}
-
-	if (pendnum == 0)
-		First = newPtr;
-	else {
-		Last->nextnode = newPtr;
-		newPtr->prevnode = Last;
-	}
-
-	Last = newPtr;
-	pendnum++;
 }
 
 void vgageti(Sint4 x, Sint4 y, Uint3 *p, Sint4 w, Sint4 h)
@@ -339,17 +291,16 @@ void vgaputim(Sint4 x, Sint4 y, Sint4 ch, Sint4 w, Sint4 h)
 	SDL_Surface *mask;
 	SDL_Surface *scr = NULL;
 	Uint8   *tmp_pxl, *mask_pxl, *scr_pxl;
-	Sint4 realsize;
-	Sint4 i;
+
 
 	tmp = ch2bmap(sprites[ch*2], w, h);
 	mask = ch2bmap(sprites[ch*2+1], w, h);
 	vgageti(x, y, (Uint3 *)&scr, w, h);
-	realsize = scr->w * scr->h;
+	int realsize = scr->w * scr->h;
 	tmp_pxl = (Uint8 *)tmp->pixels;
 	mask_pxl = (Uint8 *)mask->pixels;
 	scr_pxl = (Uint8 *)scr->pixels;
-	for(i=0;i<realsize;i++)
+	for(int i=0;i<realsize;i++)
 		if(tmp_pxl[i] != 0xff)
 			scr_pxl[i] = (scr_pxl[i] & mask_pxl[i]) | \
 				tmp_pxl[i];
@@ -403,6 +354,7 @@ void vgawrite(Sint4 x, Sint4 y, Sint4 ch, Sint4 c)
 	tmp->pixels = copy;
 	vgaputi(x, y, (Uint3 *)&tmp, w, h);
 	SDL_FreeSurface(tmp);
+	delete[] copy;
 }
 
 void vgatitle(void)
@@ -421,12 +373,5 @@ void gretrace(void)
 
 void savescreen(void)
 {
-/*	FILE *f;
-	int i;
-
-	f=fopen("screen.saw", "w");
-
-	for(i=0;i<(VGLDisplay->Xsize*VGLDisplay->Ysize);i++)
-		fputc(VGLDisplay->Bitmap[i], f);
-	fclose(f);*/
+	SDL_SaveBMP(screen, "screen.bmp");
 }

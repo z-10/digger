@@ -51,7 +51,7 @@ typedef unsigned long int Uint5;
 #define INI_KEY_SETTINGS "Keys"
 
 #define DEFAULT_BUFFER 128
-#define DEF_SND_DEV 0
+#define DEF_SND_DEV 1
 #define ININAME "DIGGER.INI"
 
 #define DIGGER_VERSION "SDL2 0.0.1 RS"

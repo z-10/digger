@@ -155,7 +155,7 @@ void recstart(void)
   recp=0;
 }
 
-void mprintf(char *f,...)
+void mprintf(const char *f,...)
 {
   va_list ap;
   char buf[80];
@@ -302,6 +302,10 @@ void recputrand(Uint5 randv)
 
 void recsavedrf(void)
 {
+	if (recb == NULL)
+	{
+		return;
+	}
   FILE *recf;
   Uint5 i;
   int j;

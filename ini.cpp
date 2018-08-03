@@ -100,7 +100,7 @@ void WriteINIString(const char *section, const char *key, const char *value, con
   return;
 }
 
-void GetINIString(char *section,char *key,char *def,char *dest,
+void GetINIString(const char *section, const char *key, const char *def,char *dest,
                              int destsize,const char *filename)
 {
   FILE *fp;
@@ -135,7 +135,7 @@ void GetINIString(char *section,char *key,char *def,char *dest,
   fclose(fp);
 }
 
-Sint5 GetINIInt(char *section,char *key,Sint5 def,const char *filename)
+Sint5 GetINIInt(const char *section, const char *key,Sint5 def,const char *filename)
 {
   char buf[80];
   sprintf(buf,"%li",def);
@@ -143,7 +143,7 @@ Sint5 GetINIInt(char *section,char *key,Sint5 def,const char *filename)
   return atol(buf);
 }
 
-void WriteINIInt(char *section,char *key,Sint5 value,
+void WriteINIInt(const char *section, const char *key,Sint5 value,
                             char *filename)
 {
   char buf[80];
@@ -151,7 +151,7 @@ void WriteINIInt(char *section,char *key,Sint5 value,
   WriteINIString(section,key,buf,filename);
 }
 
-bool GetINIBool(char *section,char *key,bool def,const char *filename)
+bool GetINIBool(const char *section, const char *key,bool def,const char *filename)
 {
   char buf[80];
   sprintf(buf,"%i",def);
@@ -162,7 +162,7 @@ bool GetINIBool(char *section,char *key,bool def,const char *filename)
     return atoi(buf);
 }
 
-void WriteINIBool(char *section,char *key,bool value,
+void WriteINIBool(const char *section, const char *key,bool value,
                              const char *filename)
 {
   WriteINIString(section,key,value ? "true" : "false", filename);

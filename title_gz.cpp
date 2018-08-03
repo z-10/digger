@@ -1,4 +1,4 @@
-#include "miniz.c"
+#include "miniz.h"
 
 #include "def.h"
 #define CTITLELEN 2772

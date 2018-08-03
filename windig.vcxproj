@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,34 +19,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1D58BF54-6F76-4575-9315-E334A5D1FAEE}</ProjectGuid>
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{730B8910-3910-4DDE-9BC0-4E4528B69597}</ProjectGuid>
     <RootNamespace>windig</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -69,59 +70,71 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\HOBBY\windig\windig\external\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\HOBBY\windig\windig\external\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)externals\SDL2\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\HOBBY\windig\windig\external\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\HOBBY\windig\windig\external\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)externals\SDL2\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\HOBBY\windig\windig\external\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\HOBBY\windig\windig\external\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)externals\SDL2\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\HOBBY\windig\windig\external\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\HOBBY\windig\windig\external\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)externals\SDL2\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)externals\SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y $(SolutionDir)externals\SDL2\lib\x86\SDL2.dll $(TargetDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)externals\SDL2\lib\x64</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y $(SolutionDir)externals\SDL2\lib\x64\SDL2.dll $(TargetDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)externals\SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y $(SolutionDir)externals\SDL2\lib\x86\SDL2.dll $(TargetDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -129,68 +142,66 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)externals\SDL2\lib\x64</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y $(SolutionDir)externals\SDL2\lib\x64\SDL2.dll $(TargetDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\alpha.cpp" />
-    <ClCompile Include="..\bags.cpp" />
-    <ClCompile Include="..\digger.cpp" />
-    <ClCompile Include="..\drawing.cpp" />
-    <ClCompile Include="..\icon.cpp" />
-    <ClCompile Include="..\ini.cpp" />
-    <ClCompile Include="..\input.cpp" />
-    <ClCompile Include="..\main.cpp" />
-    <ClCompile Include="..\miniz.c" />
-    <ClCompile Include="..\monster.cpp" />
-    <ClCompile Include="..\newsnd.cpp" />
-    <ClCompile Include="..\record.cpp" />
-    <ClCompile Include="..\scores.cpp" />
-    <ClCompile Include="..\sdl_kbd.cpp" />
-    <ClCompile Include="..\sdl_snd.cpp" />
-    <ClCompile Include="..\sdl_timer.cpp" />
-    <ClCompile Include="..\sdl_vid.cpp" />
-    <ClCompile Include="..\sound.cpp" />
-    <ClCompile Include="..\sprite.cpp" />
-    <ClCompile Include="..\title_gz.cpp" />
-    <ClCompile Include="..\vgagrafx.cpp" />
+    <ClCompile Include="alpha.cpp" />
+    <ClCompile Include="bags.cpp" />
+    <ClCompile Include="digger.cpp" />
+    <ClCompile Include="drawing.cpp" />
+    <ClCompile Include="icon.cpp" />
+    <ClCompile Include="ini.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="miniz.c" />
+    <ClCompile Include="monster.cpp" />
+    <ClCompile Include="newsnd.cpp" />
+    <ClCompile Include="record.cpp" />
+    <ClCompile Include="scores.cpp" />
+    <ClCompile Include="sdl_kbd.cpp" />
+    <ClCompile Include="sdl_snd.cpp" />
+    <ClCompile Include="sdl_timer.cpp" />
+    <ClCompile Include="sdl_vid.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="title_gz.cpp" />
+    <ClCompile Include="vgagrafx.cpp" />
+    <ClCompile Include="windows.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\bags.h" />
-    <ClInclude Include="..\def.h" />
-    <ClInclude Include="..\device.h" />
-    <ClInclude Include="..\digger.h" />
-    <ClInclude Include="..\drawing.h" />
-    <ClInclude Include="..\hardware.h" />
-    <ClInclude Include="..\icon.h" />
-    <ClInclude Include="..\ini.h" />
-    <ClInclude Include="..\input.h" />
-    <ClInclude Include="..\main.h" />
-    <ClInclude Include="..\monster.h" />
-    <ClInclude Include="..\newsnd.h" />
-    <ClInclude Include="..\record.h" />
-    <ClInclude Include="..\scores.h" />
-    <ClInclude Include="..\sdl_snd.h" />
-    <ClInclude Include="..\sdl_vid.h" />
-    <ClInclude Include="..\sound.h" />
-    <ClInclude Include="..\sprite.h" />
-    <ClInclude Include="..\title_gz.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\digger.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\icon.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\LICENSE" />
-    <None Include="..\README.md" />
+    <ClInclude Include="bags.h" />
+    <ClInclude Include="def.h" />
+    <ClInclude Include="device.h" />
+    <ClInclude Include="digger.h" />
+    <ClInclude Include="drawing.h" />
+    <ClInclude Include="hardware.h" />
+    <ClInclude Include="icon.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="miniz.h" />
+    <ClInclude Include="monster.h" />
+    <ClInclude Include="newsnd.h" />
+    <ClInclude Include="record.h" />
+    <ClInclude Include="scores.h" />
+    <ClInclude Include="sdl_snd.h" />
+    <ClInclude Include="sdl_vid.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="sprite.h" />
+    <ClInclude Include="title_gz.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

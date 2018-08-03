@@ -27,7 +27,7 @@ void initdbfspr(void);
 void drawbackg(Sint4 l);
 void drawfield(void);
 
-void outtext(char *p,Sint4 x,Sint4 y,Sint4 c)
+void outtext(const char *p,Sint4 x,Sint4 y,Sint4 c)
 {
   Sint4 i;
   for (i=0;p[i];i++) {

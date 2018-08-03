@@ -321,12 +321,11 @@ void maininit(void)
   initsound();
   recstart();
 }
-
 int main(int argc,char *argv[])
 {
-  maininit();
-  parsecmd(argc,argv);
-  return mainprog();
+	parsecmd(argc, argv);
+	maininit();
+	return mainprog();
 }
 
 int mainprog(void)
@@ -649,7 +648,7 @@ void parsecmd(int argc,char *argv[])
         printf("DIGGER - Copyright (c) 1983 Windmill software\n"
                "Restored 1998 by AJ Software\n"
                "http://www.digger.org\n"
-               "Version: "DIGGER_VERSION"\n\n"
+               "Version: "  DIGGER_VERSION  "\n\n"
 
                "Command line syntax:\n"
                "  DIGGER [[/S:]speed] [[/L:]level file] [/C] [/B] [/Q] [/M] "
@@ -675,7 +674,7 @@ void parsecmd(int argc,char *argv[])
       }
       if (word[1]=='Q' || word[1]=='q')
         soundflag=false;
-        if (word[1]=='F' || word[1]=='f')
+      if (word[1]=='F' || word[1]=='f')
           switchmode();
 
       if (word[1]=='M' || word[1]=='m')
@@ -774,7 +773,7 @@ Sint4 randno(Sint4 n)
   return (Sint4)((randv&0x7fffffffl)%n);
 }
 
-char *keynames[17]={"Right","Up","Left","Down","Fire",
+const char *keynames[17]={"Right","Up","Left","Down","Fire",
                     "Right","Up","Left","Down","Fire",
                     "Cheat","Accel","Brake","Music","Sound","Exit","Pause"};
 

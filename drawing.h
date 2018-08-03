@@ -1,4 +1,4 @@
-void outtext(char *p,Sint4 x,Sint4 y,Sint4 c);
+void outtext(const char *p,Sint4 x,Sint4 y,Sint4 c);
 
 void creatembspr(void);
 void initmbspr(void);

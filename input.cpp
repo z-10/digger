@@ -59,6 +59,13 @@ int keycodes[17][5]={{SDL_SCANCODE_RIGHT,-2,-2,-2,-2},		/* 1 Right */
 #define down2pressed  (GetAsyncKeyState(keycodes[8][0]))
 #define f12pressed    (GetAsyncKeyState(keycodes[9][0]))
 
+#define MENU_KEY_DOWN SDL_SCANCODE_DOWN
+#define MENU_KEY_UP SDL_SCANCODE_UP
+#define MENU_KEY_LEFT SDL_SCANCODE_LEFT
+#define MENU_KEY_RIGHT SDL_SCANCODE_RIGHT
+
+
+
 
 Uint4 scancode;
 
