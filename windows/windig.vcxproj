@@ -158,50 +158,62 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="alpha.cpp" />
-    <ClCompile Include="bags.cpp" />
-    <ClCompile Include="digger.cpp" />
-    <ClCompile Include="drawing.cpp" />
-    <ClCompile Include="icon.cpp" />
-    <ClCompile Include="ini.cpp" />
-    <ClCompile Include="input.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="miniz.c" />
-    <ClCompile Include="monster.cpp" />
-    <ClCompile Include="newsnd.cpp" />
-    <ClCompile Include="record.cpp" />
-    <ClCompile Include="scores.cpp" />
-    <ClCompile Include="sdl_kbd.cpp" />
-    <ClCompile Include="sdl_snd.cpp" />
-    <ClCompile Include="sdl_timer.cpp" />
-    <ClCompile Include="sdl_vid.cpp" />
-    <ClCompile Include="sound.cpp" />
-    <ClCompile Include="sprite.cpp" />
-    <ClCompile Include="title_gz.cpp" />
-    <ClCompile Include="vgagrafx.cpp" />
+    <ClCompile Include="..\alpha.cpp" />
+    <ClCompile Include="..\bags.cpp" />
+    <ClCompile Include="..\digger.cpp" />
+    <ClCompile Include="..\drawing.cpp" />
+    <ClCompile Include="..\icon.cpp" />
+    <ClCompile Include="..\ini.cpp" />
+    <ClCompile Include="..\input.cpp" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\miniz.c" />
+    <ClCompile Include="..\monster.cpp" />
+    <ClCompile Include="..\newsnd.cpp" />
+    <ClCompile Include="..\record.cpp" />
+    <ClCompile Include="..\scores.cpp" />
+    <ClCompile Include="..\sdl_kbd.cpp" />
+    <ClCompile Include="..\sdl_snd.cpp" />
+    <ClCompile Include="..\sdl_timer.cpp" />
+    <ClCompile Include="..\sdl_vid.cpp" />
+    <ClCompile Include="..\sound.cpp" />
+    <ClCompile Include="..\sprite.cpp" />
+    <ClCompile Include="..\title_gz.cpp" />
+    <ClCompile Include="..\vgagrafx.cpp" />
+    <ClCompile Include="..\windows.cpp" />
     <ClCompile Include="windows.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bags.h" />
-    <ClInclude Include="def.h" />
-    <ClInclude Include="device.h" />
-    <ClInclude Include="digger.h" />
-    <ClInclude Include="drawing.h" />
-    <ClInclude Include="hardware.h" />
-    <ClInclude Include="icon.h" />
-    <ClInclude Include="ini.h" />
-    <ClInclude Include="input.h" />
-    <ClInclude Include="main.h" />
-    <ClInclude Include="miniz.h" />
-    <ClInclude Include="monster.h" />
-    <ClInclude Include="newsnd.h" />
-    <ClInclude Include="record.h" />
-    <ClInclude Include="scores.h" />
-    <ClInclude Include="sdl_snd.h" />
-    <ClInclude Include="sdl_vid.h" />
-    <ClInclude Include="sound.h" />
-    <ClInclude Include="sprite.h" />
-    <ClInclude Include="title_gz.h" />
+    <ClInclude Include="..\bags.h" />
+    <ClInclude Include="..\def.h" />
+    <ClInclude Include="..\device.h" />
+    <ClInclude Include="..\digger.h" />
+    <ClInclude Include="..\drawing.h" />
+    <ClInclude Include="..\hardware.h" />
+    <ClInclude Include="..\icon.h" />
+    <ClInclude Include="..\ini.h" />
+    <ClInclude Include="..\input.h" />
+    <ClInclude Include="..\main.h" />
+    <ClInclude Include="..\miniz.h" />
+    <ClInclude Include="..\monster.h" />
+    <ClInclude Include="..\newsnd.h" />
+    <ClInclude Include="..\record.h" />
+    <ClInclude Include="..\scores.h" />
+    <ClInclude Include="..\sdl_snd.h" />
+    <ClInclude Include="..\sdl_vid.h" />
+    <ClInclude Include="..\sound.h" />
+    <ClInclude Include="..\sprite.h" />
+    <ClInclude Include="..\title_gz.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\digger.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE" />
+    <None Include="..\Makefile" />
+    <None Include="..\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
