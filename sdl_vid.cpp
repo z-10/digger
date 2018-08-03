@@ -69,15 +69,6 @@ SDL_Window *sdlWindow = NULL;
 SDL_Renderer *sdlRenderer = NULL;
 SDL_Texture *sdlTexture = NULL;
 
-/* Data structure holding pending updates */
-struct PendNode {
-	PendNode *prevnode;
-	PendNode *nextnode;
-	SDL_Rect rect;
-};
-
-struct PendNode *First=NULL, *Last=NULL;
-
 int pendnum = 0;
 
 SDL_Surface *ch2bmap(Uint3 *sprite, Sint4 w, Sint4 h)
@@ -90,10 +81,6 @@ SDL_Surface *ch2bmap(Uint3 *sprite, Sint4 w, Sint4 h)
 	tmp = SDL_CreateRGBSurfaceFrom(sprite, realw, realh, 8, realw, 0, 0, 0, 0);
 	SDL_SetPaletteColors(tmp->format->palette, screen->format->palette->colors, 0, screen->format->palette->ncolors);
 	return(tmp);
-}
-
-void graphicsoff(void)
-{
 }
 
 bool setmode(void)
@@ -360,10 +347,6 @@ void vgatitle(void)
 	gettitle((unsigned char*)tmp->pixels);
 	vgaputi(0, 0, (Uint3 *)&tmp, 80, 200);
 	SDL_FreeSurface(tmp);
-}
-
-void gretrace(void)
-{
 }
 
 void savescreen(void)

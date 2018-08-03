@@ -22,9 +22,6 @@ void restorekeyb(void);
 Sint4 getkey(void);
 bool kbhit(void);
 
-void graphicsoff(void);
-void gretrace(void);
-
 void vgainit(void);
 void vgaclear(void);
 void vgapal(Sint4 pal);

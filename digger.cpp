@@ -77,7 +77,6 @@ void newframe(void)
   if (synchvid) {
     for (;curtime<ftime;curtime+=17094) { /* 17094 = ticks in a refresh */
       fillbuffer();
-      gretrace();
       checkkeyb();
     }
     curtime-=ftime;

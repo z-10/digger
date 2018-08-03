@@ -444,7 +444,6 @@ void finish(void)
   soundoff();
   soundkillglob();
   restorekeyb();
-  graphicsoff();
 }
 
 void shownplayers(void)
